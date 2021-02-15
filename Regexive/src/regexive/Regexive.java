@@ -19,7 +19,7 @@ public class Regexive {
         Grafica graf= null;
         graf = new Grafica();
         graf.show();
-        System.out.println("Hola mundo");
+        //System.out.println("Hola mundo");
     }
     
 }

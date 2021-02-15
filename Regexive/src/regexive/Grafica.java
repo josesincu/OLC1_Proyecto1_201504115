@@ -5,6 +5,11 @@
  */
 package regexive;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.StringReader;
+import java.util.LinkedList;
+
 /**
  *
  * @author dark
@@ -29,7 +34,7 @@ public class Grafica extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtEntrdada = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
@@ -38,6 +43,8 @@ public class Grafica extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         Contenidos = new javax.swing.JTree();
         jPanel1 = new javax.swing.JPanel();
+        jButton3 = new javax.swing.JButton();
+        btnAnalizar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -50,12 +57,14 @@ public class Grafica extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(75, 10));
+        setSize(new java.awt.Dimension(500, 500));
 
         jLabel1.setText("Archivo de Entrada");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtEntrdada.setColumns(20);
+        txtEntrdada.setRows(5);
+        jScrollPane1.setViewportView(txtEntrdada);
 
         jLabel2.setText("Salida");
 
@@ -84,6 +93,15 @@ public class Grafica extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        jButton3.setText("Generar Automata");
+
+        btnAnalizar.setText("Analizar Entrada");
+        btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalizarActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Archivo");
 
@@ -130,6 +148,10 @@ public class Grafica extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
+                        .addGap(37, 37, 37)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAnalizar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addGap(228, 228, 228)
@@ -158,13 +180,16 @@ public class Grafica extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jButton3)
+                        .addComponent(btnAnalizar))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton2)
                         .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -177,6 +202,21 @@ public class Grafica extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
+        // TODO add your handling code here:
+        analizadores.Sintactico pars;
+        
+        try {
+            pars=new analizadores.Sintactico(new analizadores.Lexico(new BufferedReader( new StringReader(txtEntrdada.getText()))));
+            pars.parse();        
+            //AST_arbolSintaxisAbstracta=pars.getAST();
+        } catch (Exception ex) {
+            System.out.println("Error fatal en compilación de entrada.");
+        } 
+        //ejecutarAST(AST_arbolSintaxisAbstracta);
+        
+    }//GEN-LAST:event_btnAnalizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,8 +255,10 @@ public class Grafica extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTree Contenidos;
+    private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
@@ -233,7 +275,7 @@ public class Grafica extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea txtEntrdada;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,0 +1,105 @@
+/**
+ *
+ * @author dark
+ */
+
+package analizadores; 
+
+//import java_cup.runtime.*;
+import java_cup.runtime.Symbol;
+
+parser code 
+{:
+     /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+            System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+    /**
+     * Método al que se llama en el momento en que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+    }  
+    
+   
+:} 
+terminal String RCONJ;
+terminal String PTCOMA,LLAVEIZQ,LLAVEDER;
+terminal String MAS;
+terminal String ASIGNACION;
+terminal String POR;
+terminal String DPORCENTAJE;
+terminal String DOSPUNTOS,INTER,CONCAT,OR,ALCANCE,COMA;
+terminal String CADENA;
+terminal String IDENTIFICADOR;
+terminal String RLETRAMIN;
+terminal String RLETRAMAY;
+terminal String RNUMERO;
+
+non terminal ini;
+non terminal String instrucciones;
+non terminal String bloques;
+non terminal String bloque;
+non terminal String instruccion;
+non terminal String lista_expresion;
+non terminal String expresion_regular;
+non terminal String tipo;
+non terminal String comprobar;
+
+
+
+start with ini; 
+
+ini::= bloques
+/*{:
+    //se guarda el AST, que es la lista principal de instrucciones en la variable
+    //AST que se definió dentro del parser
+    
+    //parser.AST=a;
+:}*/
+;
+bloques::=
+     bloques LLAVEIZQ bloque LLAVEDER
+     |LLAVEIZQ bloque LLAVEDER
+;
+bloque::= instrucciones
+;
+
+instrucciones ::= 
+  instrucciones:a instruccion:b {:System.out.println("Instrucciones:"+a);:}
+ |instruccion:a {:RESULT=a;:}
+; 
+
+instruccion::= 
+  RCONJ:a DOSPUNTOS:b IDENTIFICADOR:c ASIGNACION:d tipo:f PTCOMA{:RESULT =a+b+c+d+f;:}
+ |IDENTIFICADOR ASIGNACION lista_expresion PTCOMA
+ |DPORCENTAJE DPORCENTAJE
+ |comprobar
+ |error
+;
+
+tipo::= 
+     RLETRAMIN:a ALCANCE:b RLETRAMIN:c{:System.out.println("tipo: "+a+b+c);RESULT=a+b+c;:}
+    |RLETRAMAY:a ALCANCE:b RLETRAMAY:c {:System.out.println("tipo: "+a+b+c);RESULT=a+b+c;:}
+    |RNUMERO:a ALCANCE:b RNUMERO:c {:System.out.println("tipo: "+a+b+c);RESULT=a+b+c;:}
+;
+
+lista_expresion::=
+        lista_expresion:a expresion_regular:b {:RESULT=a;:}
+        |expresion_regular:a {:RESULT=a;:}
+;
+expresion_regular::=
+    CONCAT:a {:RESULT=a;:}
+    |LLAVEIZQ:a IDENTIFICADOR:b LLAVEDER:c {:RESULT=a+b+c;:}
+    |MAS:a {:RESULT=a;:}
+    |POR:a {:RESULT=a;:}
+    |OR:a {:RESULT=a;:}
+    |INTER:a {:RESULT=a;:}
+    |CADENA:a {:RESULT=a;:}
+;
+
+comprobar::=
+    IDENTIFICADOR DOSPUNTOS CADENA PTCOMA
+;
