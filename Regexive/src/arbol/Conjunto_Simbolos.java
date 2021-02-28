@@ -83,6 +83,11 @@ public class Conjunto_Simbolos {
             System.out.println("dato: "+((char)valor));
         }
     }
+    
+    public void agregar_nueva(int valor)
+    {
+        this.letra_conjunto.add(valor);
+    }
 
     
     

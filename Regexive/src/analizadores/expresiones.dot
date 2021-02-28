@@ -1,0 +1,25 @@
+digraph G{
+rankdir=UD
+node[shape=box]
+concentrate=true
+nodo10 [ label ="."];
+nodo8 [ label ="."];
+nodo1 [ label ="letra"];
+nodo8->nodo1
+nodo7 [ label ="*"];
+nodo6 [ label ="|"];
+nodo2 [ label ="\"_\""];
+nodo6->nodo2
+nodo5 [ label ="|"];
+nodo3 [ label ="letra"];
+nodo5->nodo3
+nodo4 [ label ="digito"];
+nodo5->nodo4
+nodo6->nodo5
+nodo7->nodo6
+nodo8->nodo7
+nodo10->nodo8
+nodo11 [ label ="#"];
+nodo10->nodo11
+
+}

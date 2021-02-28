@@ -4,13 +4,81 @@
  */
 
 package analizadores; 
+import arbol.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 //import java_cup.runtime.*;
 import java_cup.runtime.*;
 
 parser code 
 {:
-     /**
+     //-------------------------------------
+     public static int contId=1;
+    public static Nodo Raiz;
+    public static void graficarArbol(Nodo act, String nombre){
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter("src//analizadores//" + nombre + ".dot");
+            pw = new PrintWriter(fichero);
+            pw.println("digraph G{");
+            pw.println("rankdir=UD");
+            pw.println("node[shape=box]");
+            pw.println("concentrate=true");
+            pw.println(act.getCodigoInterno());
+            pw.println("}");
+        } catch (Exception e) {
+            System.out.println("error, no se realizo el archivo");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        //para compilar el archivo dot y obtener la imagen
+        try {
+            //dirección doonde se ecnuentra el compilador de graphviz
+          
+            String dotPath="dot";
+            //dirección del archivo dot
+            String fileInputPath = "src//analizadores//"+ nombre + ".dot";
+            //dirección donde se creara la magen
+            String fileOutputPath = "src//analizadores//" +nombre+ ".jpg";
+            //tipo de conversón
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            //dot -Tjpg filename.dot -o outfile.jpg
+
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        }
+    }
+
+
+
+
+
+//---------------------------------------------------    
+/**
      * Método al que se llama automáticamente ante algún error sintactico.
      **/ 
     public void syntax_error(Symbol s){ 
@@ -25,10 +93,11 @@ parser code
     
    
 :} 
-terminal String RCONJ;
+terminal String RCONJ, GBAJO;
+terminal String PUNTO;
 terminal String PTCOMA,LLAVEIZQ,LLAVEDER;
 terminal String MAS;
-terminal String ASIGNACION;
+terminal String MENOS,FLECHA;
 terminal String POR;
 terminal String DPORCENTAJE;
 terminal String DOSPUNTOS,INTER,CONCAT,OR,ALCANCE,COMA;
@@ -38,68 +107,172 @@ terminal String RLETRAMIN;
 terminal String RLETRAMAY;
 terminal String RNUMERO;
 
-non terminal ini;
-non terminal String instrucciones;
-non terminal String bloques;
-non terminal String bloque;
-non terminal String instruccion;
-non terminal String lista_expresion;
-non terminal String expresion_regular;
-non terminal String tipo;
-non terminal String comprobar;
+//NUEVS SIMNOLOS
+terminal String ADMI;
+terminal String COMILLA;
+terminal String NUME;
+terminal String DOLAR;
+terminal String ANDD;
+terminal String SIMBOLS;
 
+non terminal ini;
+non terminal Nodo instrucciones;
+non terminal Nodo bloques;
+non terminal Nodo bloque;
+non terminal Nodo instruccion;
+non terminal Nodo lista_expresion;
+non terminal Nodo expresion_regular;
+non terminal Nodo tipo;
+non terminal Nodo comprobar;
+
+//Operaciones con expresiones 
+precedence left INTER;
+precedence left MAS;
+precedence left POR;
+precedence left OR;
+precedence left CONCAT;
+//precedence right UMENOS; 
 
 
 start with ini; 
 
-ini::= bloques
-/*{:
+ini::= bloques:a
+{:
     //se guarda el AST, que es la lista principal de instrucciones en la variable
     //AST que se definió dentro del parser
     
+    //parser.Raiz = a;
+    //graficarArbol(a,"expresion");
+
     //parser.AST=a;
-:}*/
+:}
 ;
 bloques::=
      bloques LLAVEIZQ bloque LLAVEDER
-     |LLAVEIZQ bloque LLAVEDER
+     |LLAVEIZQ bloque:a LLAVEDER {:RESULT=a;:}
 ;
-bloque::= instrucciones
+bloque::= instrucciones:a
+{:RESULT=a;:}
 ;
 
 instrucciones ::= 
-  instrucciones:a instruccion:b {:System.out.println("Instrucciones:"+a);:}
+  instrucciones:a instruccion:b {::}
  |instruccion:a {:RESULT=a;:}
 ; 
 
 instruccion::= 
-  RCONJ:a DOSPUNTOS:b IDENTIFICADOR:c ASIGNACION:d tipo:f PTCOMA{:RESULT =a+b+c+d+f;:}
- |IDENTIFICADOR ASIGNACION lista_expresion PTCOMA
- |DPORCENTAJE DPORCENTAJE
+  RCONJ:a DOSPUNTOS:b IDENTIFICADOR:c MENOS:d FLECHA tipo:f PTCOMA{::}
+ |IDENTIFICADOR MENOS FLECHA lista_expresion:a PTCOMA{:RESULT=a;:}
+ |DPORCENTAJE DPORCENTAJE DPORCENTAJE DPORCENTAJE
  |comprobar
  |error
 ;
 
 tipo::= 
-     RLETRAMIN:a ALCANCE:b RLETRAMIN:c{:System.out.println("tipo: "+a+b+c);RESULT=a+b+c;:}
-    |RLETRAMAY:a ALCANCE:b RLETRAMAY:c {:System.out.println("tipo: "+a+b+c);RESULT=a+b+c;:}
-    |RNUMERO:a ALCANCE:b RNUMERO:c {:System.out.println("tipo: "+a+b+c);RESULT=a+b+c;:}
+     RLETRAMIN:a ALCANCE:b RLETRAMIN:c{::}
+    |RLETRAMAY:a ALCANCE:b RLETRAMAY:c {::}
+    |RNUMERO:a ALCANCE:b RNUMERO:c {::}
+    |RLETRAMIN
+    |RLETRAMAY
+    |RNUMERO
+    |COMA
 ;
 
 lista_expresion::=
-        lista_expresion:a expresion_regular:b {:RESULT=a;:}
-        |expresion_regular:a {:RESULT=a;:}
+        lista_expresion:a expresion_regular:b {::}
+        |expresion_regular:a 
+        {:
+            Nodo aceptacion = new Nodo(null,null, "#", parser.contId+2);
+            Nodo concatenacion = new Nodo(a,aceptacion, ".", parser.contId+1);
+            
+            RESULT=concatenacion;
+            //RESULT=a;
+            parser.Raiz = concatenacion;
+            graficarArbol(concatenacion,"expresiones");
+        :}
 ;
+//| {letra} {digito};
 expresion_regular::=
-    CONCAT:a {:RESULT=a;:}
-    |LLAVEIZQ:a IDENTIFICADOR:b LLAVEDER:c {:RESULT=a+b+c;:}
-    |MAS:a {:RESULT=a;:}
-    |POR:a {:RESULT=a;:}
-    |OR:a {:RESULT=a;:}
-    |INTER:a {:RESULT=a;:}
-    |CADENA:a {:RESULT=a;:}
+    OR:c expresion_regular:a expresion_regular:b 
+    {:
+        //Expresion a|b;
+                Nodo nuevaOr = new Nodo(a, b, "|", parser.contId);
+                parser.contId++;
+                RESULT = nuevaOr;
+                System.out.print(a+" "+c+" "+b);
+    :}
+    |CONCAT:c expresion_regular:a expresion_regular:b
+    {:
+    //Expresion a.b;
+                Nodo nuevaConcat = new Nodo(a, b, ".", parser.contId);
+                parser.contId++;
+                RESULT = nuevaConcat;
+                System.out.print(c);
+    :}
+    |POR:c expresion_regular:a
+    {:
+        //Expresion a*;
+                Nodo nuevaPor = new Nodo(a,null,c, parser.contId);
+                parser.contId++;
+                RESULT = nuevaPor;
+                System.out.print(c);
+    :}
+    |INTER:b expresion_regular:a
+    {:
+        //Expresion a?;
+                Nodo nuevaInter = new Nodo(a,null,b, parser.contId);
+                parser.contId++;
+                RESULT = nuevaInter;
+                
+    :}
+    |MAS:b expresion_regular:a
+    {:
+        //Expresion a+;
+                Nodo nuevaInter = new Nodo(a,null,b, parser.contId);
+                parser.contId++;
+                RESULT = nuevaInter;
+                
+    :}
+    |LLAVEIZQ IDENTIFICADOR:a LLAVEDER
+    {:
+    //Expresion identificador;
+                Nodo nuevaIdent = new Nodo(null,null,a, parser.contId);
+                parser.contId++;
+                RESULT = nuevaIdent;
+                System.out.print(a+" ");
+    :}
+    |GBAJO:a
+    {:
+        //Expresion "_";
+                Nodo nuevaGuion = new Nodo(null, null,"\\\""+a.substring(1,a.length()-1)+"\\\"", parser.contId);
+                
+                parser.contId++;
+                RESULT = nuevaGuion;
+                System.out.print(a);
+    :}
+    |PUNTO:a
+    {:
+        //Expresion ".";
+                //Nodo nuevaPunto = new Nodo(null, null,"\""+a+"\"", parser.contId);
+                Nodo nuevaPunto = new Nodo(null, null,"\\\""+a.substring(1,a.length()-1)+"\\\"", parser.contId);
+                parser.contId++;
+                RESULT = nuevaPunto;
+                System.out.print(a);
+    :}
+    
 ;
 
 comprobar::=
     IDENTIFICADOR DOSPUNTOS CADENA PTCOMA
 ;
+/*
+expresion_regular::=
+    CONCAT:a {:RESULT=a;:}
+    |LLAVEIZQ:a IDENTIFICADOR:b LLAVEDER:c {::}
+    |MAS:a {::}
+    |POR:a {::}
+    |OR:a {::}
+    |INTER:a {::}
+    |CADENA:a {::}
+;
+*/

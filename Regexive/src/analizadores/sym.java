@@ -8,36 +8,48 @@ package analizadores;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int DOSPUNTOS = 10;
-  public static final int CADENA = 16;
-  public static final int OR = 13;
+  public static final int MENOS = 9;
+  public static final int PUNTO = 4;
+  public static final int GBAJO = 3;
+  public static final int CADENA = 19;
+  public static final int DOSPUNTOS = 13;
+  public static final int DOLAR = 27;
+  public static final int OR = 16;
   public static final int RCONJ = 2;
-  public static final int CONCAT = 12;
-  public static final int DPORCENTAJE = 9;
-  public static final int POR = 8;
-  public static final int LLAVEIZQ = 4;
-  public static final int ALCANCE = 14;
-  public static final int COMA = 15;
-  public static final int ASIGNACION = 7;
-  public static final int LLAVEDER = 5;
+  public static final int FLECHA = 10;
+  public static final int CONCAT = 15;
+  public static final int NUME = 26;
+  public static final int DPORCENTAJE = 12;
+  public static final int POR = 11;
+  public static final int LLAVEIZQ = 6;
+  public static final int COMA = 18;
+  public static final int ALCANCE = 17;
+  public static final int ANDD = 28;
+  public static final int LLAVEDER = 7;
+  public static final int SIMBOLS = 29;
   public static final int EOF = 0;
-  public static final int RLETRAMIN = 18;
-  public static final int RLETRAMAY = 19;
+  public static final int COMILLA = 25;
+  public static final int RLETRAMIN = 21;
+  public static final int RLETRAMAY = 22;
   public static final int error = 1;
-  public static final int IDENTIFICADOR = 17;
-  public static final int INTER = 11;
-  public static final int MAS = 6;
-  public static final int RNUMERO = 20;
-  public static final int PTCOMA = 3;
+  public static final int IDENTIFICADOR = 20;
+  public static final int INTER = 14;
+  public static final int ADMI = 24;
+  public static final int MAS = 8;
+  public static final int RNUMERO = 23;
+  public static final int PTCOMA = 5;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "RCONJ",
+  "GBAJO",
+  "PUNTO",
   "PTCOMA",
   "LLAVEIZQ",
   "LLAVEDER",
   "MAS",
-  "ASIGNACION",
+  "MENOS",
+  "FLECHA",
   "POR",
   "DPORCENTAJE",
   "DOSPUNTOS",
@@ -50,7 +62,13 @@ public class sym {
   "IDENTIFICADOR",
   "RLETRAMIN",
   "RLETRAMAY",
-  "RNUMERO"
+  "RNUMERO",
+  "ADMI",
+  "COMILLA",
+  "NUME",
+  "DOLAR",
+  "ANDD",
+  "SIMBOLS"
   };
 }
 

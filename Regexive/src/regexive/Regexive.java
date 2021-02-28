@@ -18,19 +18,11 @@ public class Regexive {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        Conjunto_Simbolos conj = new Conjunto_Simbolos("letra",'a','z');
-        conj.imprimir();
-        System.out.println("///////////////////////////////////////");
-        char a = 'a';
-        char z = 'z';
-        int valor_a = (int)a;
-        int valor_z = (int)z;
-        System.out.println(valor_a+"->"+valor_z);
-        
-        //Grafica graf= null;
-        //graf = new Grafica();
-        //graf.show();
-        //System.out.println("Hola mundo");
+       
+        Grafica graf= null;
+        graf = new Grafica();
+        graf.show();
+        System.out.println("Hola mundo");
     }
     
 }
