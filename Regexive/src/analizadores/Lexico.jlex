@@ -24,7 +24,9 @@ import java_cup.runtime.*;
 %init} 
  
 BLANCOS=[ \r\t]+
-
+ESPECIAL1 = ("\\""\'")
+ESPECIAL2 = ("\\""\"")
+ESPECIAL3 = ("\\""n")
 LETRAMIN=[a-z]
 LETRAMAY=[A-Z]
 NUMERO=[0-9]
@@ -37,27 +39,47 @@ COMENTMULTILINEA="<!"([^!>]|[^!]|"!"[^>])*"!>"
 %%
 
 "CONJ" {return new Symbol(sym.RCONJ,yycolumn,yyline, yytext());}  
+
+
+
 //Empiesa simbolos de conjunto
-"!"  {return new Symbol(sym.ADMI,yycolumn,yyline, yytext());}
-"\""  {return new Symbol(sym.COMILLA,yycolumn,yyline, yytext());}
-"#"  {return new Symbol(sym.NUME,yycolumn,yyline, yytext());}
-"$"  {return new Symbol(sym.DOLAR,yycolumn,yyline, yytext());}
+//" " {return new Symbol(sym.ESPACIO,yycolumn,yyline, yytext());}
+"!" {return new Symbol(sym.ADMI,yycolumn,yyline, yytext());}
+"\"" {return new Symbol(sym.COMILLA,yycolumn,yyline, yytext());}
+"#" {return new Symbol(sym.NUME,yycolumn,yyline, yytext());}
+"$" {return new Symbol(sym.DOLAR,yycolumn,yyline, yytext());}
 "%" {return new Symbol(sym.DPORCENTAJE,yycolumn,yyline, yytext());}
-"&"  {return new Symbol(sym.ANDD,yycolumn,yyline, yytext());}
-//Termina simbolo de conjunto
-";" {return new Symbol(sym.PTCOMA,yycolumn,yyline,yytext());}
-"{" {return new Symbol(sym.LLAVEIZQ,yycolumn,yyline, yytext());}
-"}" {return new Symbol(sym.LLAVEDER,yycolumn,yyline, yytext());} 
-"+" {return new Symbol(sym.MAS,yycolumn,yyline, yytext());} 
+"&" {return new Symbol(sym.ANDD,yycolumn,yyline, yytext());}
+"\'" {return new Symbol(sym.COMSIMPLE,yycolumn,yyline, yytext());}
+"(" {return new Symbol(sym.PABIERTA,yycolumn,yyline, yytext());}
+")" {return new Symbol(sym.PCERRADA,yycolumn,yyline, yytext());}
+"*" {return new Symbol(sym.POR,yycolumn,yyline, yytext());}
+"+" {return new Symbol(sym.MAS,yycolumn,yyline, yytext());}
+"," {return new Symbol(sym.COMA,yycolumn,yyline, yytext());}
 "-" {return new Symbol(sym.MENOS,yycolumn,yyline, yytext());}
-">" {return new Symbol(sym.FLECHA,yycolumn,yyline, yytext());} 
-"*" {return new Symbol(sym.POR,yycolumn,yyline, yytext());}  
-":" {return new Symbol(sym.DOSPUNTOS,yycolumn,yyline, yytext());} 
-"?" {return new Symbol(sym.INTER,yycolumn,yyline, yytext());} 
 "." {return new Symbol(sym.CONCAT,yycolumn,yyline, yytext());}
-"|" {return new Symbol(sym.OR,yycolumn,yyline, yytext());} 
-"~" {return new Symbol(sym.ALCANCE,yycolumn,yyline, yytext());} 
-"," {return new Symbol(sym.COMA,yycolumn,yyline, yytext());} 
+"/" {return new Symbol(sym.DIV,yycolumn,yyline, yytext());}
+":" {return new Symbol(sym.DOSPUNTOS,yycolumn,yyline, yytext());}
+";" {return new Symbol(sym.PTCOMA,yycolumn,yyline,yytext());}
+"<" {return new Symbol(sym.MENOR,yycolumn,yyline,yytext());}
+"=" {return new Symbol(sym.IGUAL,yycolumn,yyline,yytext());}
+">" {return new Symbol(sym.FLECHA,yycolumn,yyline,yytext());}
+"?" {return new Symbol(sym.INTER,yycolumn,yyline, yytext());}
+"@" {return new Symbol(sym.ARROBA,yycolumn,yyline, yytext());}
+"[" {return new Symbol(sym.CORABIERTO,yycolumn,yyline, yytext());}
+"\\" {return new Symbol(sym.BARINVERTIDA,yycolumn,yyline, yytext());}
+"]" {return new Symbol(sym.CORCERRADO,yycolumn,yyline, yytext());}
+"^" {return new Symbol(sym.POTENCIA,yycolumn,yyline, yytext());}
+"_" {return new Symbol(sym.GBAJO,yycolumn,yyline, yytext());}
+"{" {return new Symbol(sym.LLAVEIZQ,yycolumn,yyline, yytext());}
+"|" {return new Symbol(sym.OR,yycolumn,yyline, yytext());}
+"}" {return new Symbol(sym.LLAVEDER,yycolumn,yyline, yytext());}
+"~" {return new Symbol(sym.ALCANCE,yycolumn,yyline, yytext());}
+//Termina simbolo de conjunto
+
+//caracteres especiales
+
+
 
 \n {yycolumn=1;}
 
@@ -65,14 +87,17 @@ COMENTMULTILINEA="<!"([^!>]|[^!]|"!"[^>])*"!>"
     
 {LETRAMIN} {return new Symbol(sym.RLETRAMIN,yycolumn,yyline, yytext());}
 {LETRAMAY} {return new Symbol(sym.RLETRAMAY,yycolumn,yyline, yytext());}
-{NUMERO} {return new Symbol(sym.RNUMERO,yycolumn,yyline, yytext());}
-{ID} {return new Symbol(sym.IDENTIFICADOR,yycolumn,yyline, yytext());}
+{NUMERO}   {return new Symbol(sym.RNUMERO,yycolumn,yyline, yytext());}
+{ID}       {return new Symbol(sym.IDENTIFICADOR,yycolumn,yyline, yytext());}
 //{CADENACOMILLASDOBLES} {return new Symbol(sym.CADENA,yycolumn,yyline, yytext());}
 
 {CADENACOMILLASDOBLES} {return new Symbol(sym.CADENA,yycolumn,yyline, (yytext()).substring(1,yytext().length()-1));}
+{ESPECIAL1} {return new Symbol(sym.SPECIAL1,yycolumn,yyline,yytext());}
+{ESPECIAL2} {return new Symbol(sym.SPECIAL2,yycolumn,yyline,yytext());}
+{ESPECIAL3} {return new Symbol(sym.SPECIAL3,yycolumn,yyline,yytext());}
 
 
-{COMENTUNILINEA} {} 
+{COMENTUNILINEA}   {} 
 {COMENTMULTILINEA} {}
 
 . {

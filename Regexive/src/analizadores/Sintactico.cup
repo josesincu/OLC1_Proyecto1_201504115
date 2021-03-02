@@ -28,7 +28,7 @@ parser code
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("src//analizadores//" + nombre + ".dot");
+            fichero = new FileWriter("src//imagenes//" + nombre + ".dot");
             pw = new PrintWriter(fichero);
             pw.println("digraph G{");
             pw.println("rankdir=UD");
@@ -53,9 +53,9 @@ parser code
           
             String dotPath="dot";
             //dirección del archivo dot
-            String fileInputPath = "src//analizadores//"+ nombre + ".dot";
+            String fileInputPath = "src//imagenes//"+ nombre + ".dot";
             //dirección donde se creara la magen
-            String fileOutputPath = "src//analizadores//" +nombre+ ".jpg";
+            String fileOutputPath = "src//imagenes//" +nombre+ ".jpg";
             //tipo de conversón
             String tParam = "-Tjpg";
             String tOParam = "-o";
@@ -100,29 +100,53 @@ parser code
     
    
 :} 
-terminal String RCONJ, GBAJO;
-terminal String PUNTO;
-terminal String PTCOMA,LLAVEIZQ,LLAVEDER;
-terminal String MAS;
-terminal String MENOS,FLECHA;
-terminal String POR;
-terminal String DPORCENTAJE;
-terminal String DOSPUNTOS,INTER,CONCAT,OR,ALCANCE,COMA;
+
+
+
+//EXPRESIONES REGULARES
 terminal String CADENA;
 terminal String IDENTIFICADOR;
 terminal String RLETRAMIN;
 terminal String RLETRAMAY;
 terminal String RNUMERO;
+terminal String SPECIAL1;
+terminal String SPECIAL2;
+terminal String SPECIAL3;
 
-//NUEVS SIMNOLOS
+
+terminal String RCONJ;
+//terminal String ESPACIO;
 terminal String ADMI;
 terminal String COMILLA;
 terminal String NUME;
 terminal String DOLAR;
+terminal String DPORCENTAJE;
 terminal String ANDD;
-terminal String SIMBOLS;
-terminal String EARROBA;
-
+terminal String COMSIMPLE;
+terminal String PABIERTA;
+terminal String PCERRADA;
+terminal String POR;
+terminal String MAS;
+terminal String COMA;
+terminal String MENOS;
+terminal String CONCAT;
+terminal String DIV;
+terminal String DOSPUNTOS;
+terminal String PTCOMA;
+terminal String MENOR;
+terminal String IGUAL;
+terminal String FLECHA;
+terminal String INTER;
+terminal String ARROBA;
+terminal String CORABIERTO;
+terminal String BARINVERTIDA;
+terminal String CORCERRADO;
+terminal String POTENCIA;
+terminal String GBAJO;
+terminal String LLAVEIZQ;
+terminal String OR;
+terminal String LLAVEDER;
+terminal String ALCANCE;
 
 non terminal Nodo instrucciones;
 non terminal Nodo bloque;
@@ -132,6 +156,7 @@ non terminal Nodo expresion_regular;
 non terminal Nodo letras_min;
 non terminal Nodo letras_may;
 non terminal Nodo lista_numeros;
+non terminal Nodo simbolos;
 //non terminal Nodo comprobar;
 
 //Operaciones con expresiones 
@@ -148,18 +173,21 @@ start with bloque;
 bloque::= LLAVEIZQ instrucciones:a LLAVEDER {::}
 ;
 
-instrucciones ::= RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA
-    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA
+instrucciones ::= 
+    RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA //a~z
     |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMAY ALCANCE RLETRAMAY PTCOMA
-    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMAY ALCANCE RLETRAMAY PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMAY ALCANCE RLETRAMAY PTCOMA //A~Z
     |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RNUMERO ALCANCE RNUMERO PTCOMA
-    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RNUMERO ALCANCE RNUMERO PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RNUMERO ALCANCE RNUMERO PTCOMA //1~9
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA simbolos ALCANCE simbolos PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA simbolos ALCANCE simbolos PTCOMA //!~&
     |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_min PTCOMA
-    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_min PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_min PTCOMA // a,b,c,d,e
     |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_may PTCOMA
-    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_may PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_may PTCOMA //A,B,C,D
     |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA lista_numeros PTCOMA
-    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA lista_numeros PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA lista_numeros PTCOMA //1,2,3
     |IDENTIFICADOR:a MENOS FLECHA expresion_regular:b PTCOMA 
     {:
             parser.nombre_dot=a;
@@ -182,7 +210,7 @@ instrucciones ::= RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE R
             //RESULT=b;
     
     :}
-    |instrucciones IDENTIFICADOR:a MENOS FLECHA expresion_regular:b PTCOMA 
+    |instrucciones IDENTIFICADOR:a MENOS FLECHA expresion_regular:b PTCOMA  // expresion regular .{letra}{numero}
     {:
             parser.nombre_dot=a;
             parser.numera_hoja++;
@@ -203,13 +231,11 @@ instrucciones ::= RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE R
             // System.out.println("Nomde_dot=: "+parser.nombre_dot);
             //RESULT=b;
     :}
-    |instrucciones DPORCENTAJE DPORCENTAJE DPORCENTAJE DPORCENTAJE
-    |IDENTIFICADOR DOSPUNTOS CADENA PTCOMA
-    |instrucciones IDENTIFICADOR DOSPUNTOS CADENA PTCOMA
+    |instrucciones DPORCENTAJE DPORCENTAJE DPORCENTAJE DPORCENTAJE // % % % %
+    |IDENTIFICADOR DOSPUNTOS CADENA PTCOMA 
+    |instrucciones IDENTIFICADOR DOSPUNTOS CADENA PTCOMA  //nombre_expresion : cadena
     |error
 
-// instrucciones:a instruccion:b {::}
- //|instruccion:a {://RESULT=a;:}
 ; 
 
 letras_min::= letras_min COMA RLETRAMIN 
@@ -222,10 +248,43 @@ letras_may::= letras_may COMA RLETRAMAY
                    
 ;
 lista_numeros::= lista_numeros COMA RNUMERO
-              |RNUMERO
-                   
+              |RNUMERO                  
 ;
+simbolos::=
+     // ESPACIO
+     ADMI
+    |COMILLA
+    |NUME
+    |DOLAR
+    |DPORCENTAJE
+    |ANDD
+    |COMSIMPLE
+    |PABIERTA
+    |PCERRADA
+    |POR
+    //|MAS
+    |COMA
+    |MENOS
+    //|CONCAT
+    |DIV
+    |DOSPUNTOS
+    |PTCOMA
+    |MENOR
+    |IGUAL
+    |FLECHA
+    |INTER
+    |ARROBA
+    |CORABIERTO
+    |BARINVERTIDA
+    |CORCERRADO
+    |POTENCIA
+    |GBAJO
+    |LLAVEIZQ
+    |OR
+    |LLAVEDER
+    |ALCANCE
 
+;
 
 expresion_regular::=
     //| {letra} {digito};
@@ -299,6 +358,36 @@ expresion_regular::=
                 parser.contId++;
                 RESULT = nuevaGuion;
                 System.out.print(a);
-    :}    
+    :}  
+    //Expresion ESPECIAL1 \';
+    |SPECIAL1:a
+    {:
+        
+                parser.numera_hoja++;
+                Nodo nuevaGuion = new Nodo(null, null,a, parser.contId,parser.numera_hoja,"N");
+                parser.contId++;
+                RESULT = nuevaGuion;
+                System.out.print(a);
+    :}  
+    //Expresion ESPECIALES \";
+    |SPECIAL2:a
+    {:
+        
+                parser.numera_hoja++;
+                Nodo nuevaGuion = new Nodo(null, null,a, parser.contId,parser.numera_hoja,"N");
+                parser.contId++;
+                RESULT = nuevaGuion;
+                System.out.print(a);
+    :}  
+    //Expresion ESPECIALES \n;
+    |SPECIAL3:a
+    {:
+        
+                parser.numera_hoja++;
+                Nodo nuevaGuion = new Nodo(null, null,"\\"+a, parser.contId,parser.numera_hoja,"N");
+                parser.contId++;
+                RESULT = nuevaGuion;
+                System.out.print(a);
+    :}  
 ;
 
