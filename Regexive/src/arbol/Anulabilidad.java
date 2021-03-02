@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package arbol;
+import analizadores.*;
 
 import java.util.LinkedList;
 
@@ -18,6 +19,7 @@ public class Anulabilidad {
     {
         numera_hoja = 0;
         System.out.println("");
+        
     
     }
     
@@ -86,6 +88,28 @@ public class Anulabilidad {
                           }   
                       }
                 
+                 //posee singuente
+                //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo b a su SiguientePos
+                LinkedList<String> temp_prim = b.getPrimeros();
+                LinkedList<String> temp_ultimo_a = a.getUltimos();
+                
+                for (int i = 0; i <a.getUltimos().size(); i++) {
+                    
+                    
+                    for (int j = 0; j <b.getPrimeros().size(); j++) {
+                       
+                        for (int k = 0; k <Sintactico.lista_siguientes.size(); k++) {
+                            
+                            if(temp_ultimo_a.get(i).equals(Sintactico.lista_siguientes.get(k).getId_hoja()))
+                            {
+                                Sintactico.lista_siguientes.get(k).addSiguientes(temp_prim.get(j));
+                                System.out.println("");
+                            }
+                    
+                    }
+                    }
+                    //}
+                }
                 
        
    
@@ -144,7 +168,7 @@ public class Anulabilidad {
    
    }//fin del metodo llenar datos or
    
-   public void llenar_datos_aste_y_interr(Nodo nuevaPor,Nodo a)
+   public void llenar_datos_aste(Nodo nuevaPor,Nodo a)
    {
                 //calculando anulabilidad
                 nuevaPor.setAnulable("A");
@@ -162,10 +186,50 @@ public class Anulabilidad {
                 for (int i = 0; i < temp_ultimo_a.size(); i++) {
                          nuevaPor.addUltimos(temp_ultimo_a.get(i));
                 }
-
+                
+                //calculando siguientes
+                //posee siguiente
+                //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo a a su SiguientePos
+                LinkedList<String> temp_prim = a.getPrimeros();
+                for (int i = 0; i <a.getUltimos().size(); i++) {
+            
+                     for (int j = 0; j <a.getPrimeros().size(); j++) {
+                         
+                         for (int k = 0; k <Sintactico.lista_siguientes.size(); k++) {
+                            
+                            if(temp_ultimo_a.get(i).equals(Sintactico.lista_siguientes.get(k).getId_hoja()))
+                            {
+                                Sintactico.lista_siguientes.get(k).addSiguientes(temp_prim.get(j));
+                            }
+                    
+                        }
+                     }
+                }
+                
                 //************
    }//fin de llenar datos asterisco y interrogacion
    
+   public void llenar_datos_interr(Nodo nuevaInter,Nodo a)
+   {
+        //calculando anulabilidad
+                nuevaInter.setAnulable("A");
+
+                //calculando primeros
+                LinkedList<String> temp_primero_a = a.getPrimeros();
+                       
+                for (int i = 0; i < temp_primero_a.size(); i++) {
+                         nuevaInter.addPrimeros(temp_primero_a.get(i));
+                }
+
+                //calculando ultimos
+                LinkedList<String> temp_ultimo_a = a.getUltimos();
+                       
+                for (int i = 0; i < temp_ultimo_a.size(); i++) {
+                         nuevaInter.addUltimos(temp_ultimo_a.get(i));
+                }
+
+   }   
+       
    public void llenar_datos_mas(Nodo nuevaMas,Nodo a){
        
         //calcular anulabilidad
@@ -192,5 +256,27 @@ public class Anulabilidad {
         for (int i = 0; i < temp_ultimo_a.size(); i++) {
                    nuevaMas.addUltimos(temp_ultimo_a.get(i));
         }
+        
+        
+        //calculando siguientes
+        //posee siguiente
+        //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo a a su SiguientePos
+        for (int i = 0; i <a.getUltimos().size(); i++) {
+            
+            for (int j = 0; j <a.getPrimeros().size(); j++) {
+            
+                 
+                    for (int k = 0; k <Sintactico.lista_siguientes.size(); k++) {
+                        if(temp_ultimo_a.get(i).equals(Sintactico.lista_siguientes.get(k).getId_hoja()))
+                        {
+                            Sintactico.lista_siguientes.get(k).addSiguientes(temp_primero_a.get(j));
+                        }
+                    
+                    }
+             
+            }
+            
+       }
+                
    }
 }

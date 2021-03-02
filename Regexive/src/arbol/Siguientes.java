@@ -14,9 +14,10 @@ import java.util.LinkedList;
 public class Siguientes {
     
     private String nombre_hoja;
-    private String identificador;
+    private String id_hoja;
     private LinkedList<String> siguientes;
 
+    
     /**
      * @return the nombre_hoja
      */
@@ -34,15 +35,15 @@ public class Siguientes {
     /**
      * @return the identificador
      */
-    public String getIdentificador() {
-        return identificador;
+    public String getId_hoja() {
+        return id_hoja;
     }
 
     /**
      * @param identificador the identificador to set
      */
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
+    public void setId_hoja(String identificador) {
+        this.id_hoja = identificador;
     }
 
     /**
@@ -59,10 +60,28 @@ public class Siguientes {
         this.siguientes = siguientes;
     }
     
-    public void addSiguientes(String valor)
+    public Siguientes(String nombre, String id_hoja)
     {
-    
+        this.nombre_hoja = nombre;
+        this.id_hoja = id_hoja;
+        this.siguientes = new LinkedList<String>();
+        
     
     }
     
+    public void addSiguientes(String valor)
+    {
+        this.siguientes.add(valor);
+    
+    }
+    
+    public void mas_astSig(Nodo raiz,Nodo a)
+    {
+        
+    }
+    
+    public void concatenacionSig(Nodo raiz,Nodo a, Nodo b)
+    {
+    } 
+        
 }

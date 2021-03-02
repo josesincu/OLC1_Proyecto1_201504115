@@ -283,11 +283,12 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
      //mis variables
       public static Anulabilidad nodo_datos = new Anulabilidad();
+      public static LinkedList<Siguientes> lista_siguientes = new LinkedList<Siguientes>();
      //-------------------------------------
      
      public static String nombre_dot= "-1";
      public static int numera_hoja = 0;
-     public static int contId=1;
+     public static int contId=0;//estabas en 1
      public static Nodo Raiz;
     
      public static void graficarArbol(Nodo act, String nombre){
@@ -344,10 +345,88 @@ public class Sintactico extends java_cup.runtime.lr_parser {
             ex.printStackTrace();
         } finally {
         }
-    }
+    } //fin de metodo Graficar
 
 
+    //*****************
+        public static void graficarSiguientes(LinkedList<Siguientes> sig, String nombre){
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter("src//imagenes//" + nombre + ".dot");
+            pw = new PrintWriter(fichero);
+            pw.println("digraph G{");
+            pw.println("rankdir=LR");
+            pw.println("node[shape=plaintext]");
+            //******
+            pw.println("b[ label = <<TABLE BORDER=\"0\" "
+                    + "CELLBORDER=\"1\" CELLSPACING=\"0\""
+                    + " CELLPADDING=\"4\" BGCOLOR=\"green\">"
+                    + "<TR>"
+                    + "<TD COLSPAN=\"2\">Hoja</TD>"
+                    + " <TD >Siguientes</TD>"
+                    + "</TR> ");
+            
+            for(int i=0; i<lista_siguientes.size();i++)
+            {
+            pw.println("<TR>"+"\n"+
+            "<TD>"+lista_siguientes.get(i).getNombre_hoja()+"</TD>"+"\n"+
+            "<TD>"+lista_siguientes.get(i).getId_hoja()+"</TD>"+"\n"+
+            "<TD>"+lista_siguientes.get(i).getSiguientes()+"</TD>"+"\n"
+            +"</TR>");
+            
+            }
+            pw.println("</TABLE> >]");
+            //*********
+            pw.println("}");
 
+        } catch (Exception e) {
+            System.out.println("error, no se realizo el archivo");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+
+        //para compilar el archivo dot y obtener la imagen
+        try {
+            //dirección doonde se ecnuentra el compilador de graphviz
+          
+            String dotPath="dot";
+            //dirección del archivo dot
+            String fileInputPath = "src//imagenes//"+ nombre + ".dot";
+            //dirección donde se creara la magen
+            String fileOutputPath = "src//imagenes//" +nombre+ ".jpg";
+            //tipo de conversón
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            //dot -Tjpg filename.dot -o outfile.jpg
+
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        }
+    } //fin de metodo Graficar
+
+
+    //****************
 
 
 //---------------------------------------------------    
@@ -557,16 +636,16 @@ class CUP$Sintactico$actions {
             parser.nombre_dot=a;
             parser.numera_hoja++;
             Nodo aceptacion = new Nodo(null,null, "#", parser.contId+2,parser.numera_hoja,"N");
+            parser.lista_siguientes.add(new Siguientes("#",String.valueOf(parser.numera_hoja)));
             Nodo concatenacion = new Nodo(b,aceptacion, ".", parser.contId+1);
             nodo_datos.llenar_datos_concatenacion(concatenacion,b,aceptacion);
             
             
-            
-            //parser.Raiz = concatenacion;
-            System.out.println("Aqui en primer: Nomde_dot=: "+parser.nombre_dot);
             graficarArbol(concatenacion,parser.nombre_dot);
+            graficarSiguientes(parser.lista_siguientes,parser.nombre_dot+"Sig");
             parser.contId =0;
             parser.numera_hoja =0;
+            //parser.lista_siguientes = new LinkedList<>();;
             //parser.nombre_dot = "";
             RESULT=concatenacion;
      
@@ -592,21 +671,20 @@ class CUP$Sintactico$actions {
             parser.nombre_dot=a;
             parser.numera_hoja++;
             Nodo aceptacion = new Nodo(null,null, "#", parser.contId+2,parser.numera_hoja,"N");
+            parser.lista_siguientes.add(new Siguientes("#",String.valueOf(parser.numera_hoja)));
+
             Nodo concatenacion = new Nodo(b,aceptacion, ".", parser.contId+1);
             nodo_datos.llenar_datos_concatenacion(concatenacion,b,aceptacion);
             
             
-            
-            //parser.Raiz = concatenacion;
-            System.out.println("Aqui en primer: Nomde_dot=: "+parser.nombre_dot);
             graficarArbol(concatenacion,parser.nombre_dot);
+            graficarSiguientes(parser.lista_siguientes,parser.nombre_dot+"Sig");
+            
             parser.contId =0;
             parser.numera_hoja =0;
-            //parser.nombre_dot = "";
+            //parser.lista_siguientes = new LinkedList<>();
             RESULT=concatenacion;
      
-            // System.out.println("Nomde_dot=: "+parser.nombre_dot);
-            //RESULT=b;
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("instrucciones",0, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-5)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1006,8 +1084,10 @@ class CUP$Sintactico$actions {
                 Nodo nuevaConcat = new Nodo(a,b, ".", parser.contId);
                 nodo_datos.llenar_datos_concatenacion(nuevaConcat,a,b);
                 parser.contId++;
+                //posee singuente
+                //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo b a su SiguientePos
                 RESULT = nuevaConcat;
-                System.out.print(c);
+                
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion_regular",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1026,11 +1106,11 @@ class CUP$Sintactico$actions {
 		
     
                 Nodo nuevaPor = new Nodo(a,null,c, parser.contId);
-                nodo_datos.llenar_datos_aste_y_interr(nuevaPor,a);
-                
+                nodo_datos.llenar_datos_aste(nuevaPor,a);
                 parser.contId++;
+                
                 RESULT = nuevaPor;
-                System.out.println(c);
+                
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion_regular",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1049,7 +1129,7 @@ class CUP$Sintactico$actions {
 		
         
                 Nodo nuevaInter = new Nodo(a,null,b, parser.contId);
-                nodo_datos.llenar_datos_aste_y_interr(nuevaInter,a);
+                nodo_datos.llenar_datos_interr(nuevaInter,a);
                 parser.contId++;
                 RESULT = nuevaInter;
                 
@@ -1073,6 +1153,7 @@ class CUP$Sintactico$actions {
                 Nodo nuevaMas = new Nodo(a,null,b, parser.contId);
                 nodo_datos.llenar_datos_mas(nuevaMas,a);
                 parser.contId++;
+                
                 RESULT = nuevaMas;
                 
     
@@ -1091,9 +1172,10 @@ class CUP$Sintactico$actions {
     
                 parser.numera_hoja++;
                 Nodo nuevaIdent = new Nodo(null,null,a, parser.contId,parser.numera_hoja,"N");
+                parser.lista_siguientes.add(new Siguientes(a,String.valueOf(parser.numera_hoja)));
                 parser.contId++;
                 RESULT = nuevaIdent;
-                System.out.print(a);
+                
                 
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion_regular",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -1111,9 +1193,10 @@ class CUP$Sintactico$actions {
         
                 parser.numera_hoja++;
                 Nodo nuevaGuion = new Nodo(null, null,"\\\""+a+"\\\"", parser.contId,parser.numera_hoja,"N");
+                parser.lista_siguientes.add(new Siguientes("\\\""+a+"\\\"",String.valueOf(parser.numera_hoja)));
                 parser.contId++;
                 RESULT = nuevaGuion;
-                System.out.print(a);
+                
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion_regular",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1130,9 +1213,11 @@ class CUP$Sintactico$actions {
         
                 parser.numera_hoja++;
                 Nodo nuevaGuion = new Nodo(null, null,a, parser.contId,parser.numera_hoja,"N");
+                parser.lista_siguientes.add(new Siguientes(a,String.valueOf(parser.numera_hoja)));
+                System.out.println("Contador: "+parser.contId);
                 parser.contId++;
                 RESULT = nuevaGuion;
-                System.out.print(a);
+               
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion_regular",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1149,9 +1234,11 @@ class CUP$Sintactico$actions {
         
                 parser.numera_hoja++;
                 Nodo nuevaGuion = new Nodo(null, null,a, parser.contId,parser.numera_hoja,"N");
+                parser.lista_siguientes.add(new Siguientes(a,String.valueOf(parser.numera_hoja)));
+                System.out.println("Contador: "+parser.contId);
                 parser.contId++;
                 RESULT = nuevaGuion;
-                System.out.print(a);
+                
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion_regular",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1168,9 +1255,10 @@ class CUP$Sintactico$actions {
         
                 parser.numera_hoja++;
                 Nodo nuevaGuion = new Nodo(null, null,"\\"+a, parser.contId,parser.numera_hoja,"N");
+                parser.lista_siguientes.add(new Siguientes("\\"+a,String.valueOf(parser.numera_hoja)));
                 parser.contId++;
                 RESULT = nuevaGuion;
-                System.out.print(a);
+               
     
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion_regular",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }

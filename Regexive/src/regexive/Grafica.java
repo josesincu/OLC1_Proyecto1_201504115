@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package regexive;
+import analizadores.*;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -211,6 +212,12 @@ public class Grafica extends javax.swing.JFrame {
             pars=new analizadores.Sintactico(new analizadores.Lexico(new BufferedReader( new StringReader(txtEntrdada.getText()))));
             pars.parse();        
             //AST_arbolSintaxisAbstracta=pars.getAST();
+            //**************
+       
+            
+            
+            
+            
         } catch (Exception ex) {
             System.out.println("Error fatal en compilación de entrada.");
         } 
