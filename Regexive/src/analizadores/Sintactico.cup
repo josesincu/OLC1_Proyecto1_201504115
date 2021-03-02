@@ -8,16 +8,23 @@ import arbol.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 
 //import java_cup.runtime.*;
 import java_cup.runtime.*;
 
 parser code 
 {:
+     //mis variables
+      public static Anulabilidad nodo_datos = new Anulabilidad();
      //-------------------------------------
+     
+     public static String nombre_dot= "-1";
+     public static int numera_hoja = 0;
      public static int contId=1;
-    public static Nodo Raiz;
-    public static void graficarArbol(Nodo act, String nombre){
+     public static Nodo Raiz;
+    
+     public static void graficarArbol(Nodo act, String nombre){
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
@@ -25,7 +32,7 @@ parser code
             pw = new PrintWriter(fichero);
             pw.println("digraph G{");
             pw.println("rankdir=UD");
-            pw.println("node[shape=box]");
+            pw.println("node[shape=record]");
             pw.println("concentrate=true");
             pw.println(act.getCodigoInterno());
             pw.println("}");
@@ -82,13 +89,13 @@ parser code
      * Método al que se llama automáticamente ante algún error sintactico.
      **/ 
     public void syntax_error(Symbol s){ 
-            System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+            System.err.println("Error Sintáctico en la Fila " + (s.right) +" Columna "+s.left+ ". No se esperaba este componente: " +s.value+"."); 
     } 
     /**
      * Método al que se llama en el momento en que ya no es posible una recuperación de errores.
      **/ 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+            System.err.println("Error síntactico irrecuperable en la Línea " + (s.right)+ " Columna "+s.left+". Componente " + s.value + " no reconocido."); 
     }  
     
    
@@ -114,16 +121,18 @@ terminal String NUME;
 terminal String DOLAR;
 terminal String ANDD;
 terminal String SIMBOLS;
+terminal String EARROBA;
 
-non terminal ini;
+
 non terminal Nodo instrucciones;
-non terminal Nodo bloques;
 non terminal Nodo bloque;
-non terminal Nodo instruccion;
-non terminal Nodo lista_expresion;
 non terminal Nodo expresion_regular;
-non terminal Nodo tipo;
-non terminal Nodo comprobar;
+
+
+non terminal Nodo letras_min;
+non terminal Nodo letras_may;
+non terminal Nodo lista_numeros;
+//non terminal Nodo comprobar;
 
 //Operaciones con expresiones 
 precedence left INTER;
@@ -131,148 +140,165 @@ precedence left MAS;
 precedence left POR;
 precedence left OR;
 precedence left CONCAT;
-//precedence right UMENOS; 
 
 
-start with ini; 
 
-ini::= bloques:a
-{:
-    //se guarda el AST, que es la lista principal de instrucciones en la variable
-    //AST que se definió dentro del parser
+start with bloque; 
+
+bloque::= LLAVEIZQ instrucciones:a LLAVEDER {::}
+;
+
+instrucciones ::= RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMAY ALCANCE RLETRAMAY PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMAY ALCANCE RLETRAMAY PTCOMA
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RNUMERO ALCANCE RNUMERO PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RNUMERO ALCANCE RNUMERO PTCOMA
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_min PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_min PTCOMA
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_may PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_may PTCOMA
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA lista_numeros PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA lista_numeros PTCOMA
+    |IDENTIFICADOR:a MENOS FLECHA expresion_regular:b PTCOMA 
+    {:
+            parser.nombre_dot=a;
+            parser.numera_hoja++;
+            Nodo aceptacion = new Nodo(null,null, "#", parser.contId+2,parser.numera_hoja,"N");
+            Nodo concatenacion = new Nodo(b,aceptacion, ".", parser.contId+1);
+            nodo_datos.llenar_datos_concatenacion(concatenacion,b,aceptacion);
+            
+            
+            
+            //parser.Raiz = concatenacion;
+            System.out.println("Aqui en primer: Nomde_dot=: "+parser.nombre_dot);
+            graficarArbol(concatenacion,parser.nombre_dot);
+            parser.contId =0;
+            parser.numera_hoja =0;
+            //parser.nombre_dot = "";
+            RESULT=concatenacion;
+     
+            // System.out.println("Nomde_dot=: "+parser.nombre_dot);
+            //RESULT=b;
     
-    //parser.Raiz = a;
-    //graficarArbol(a,"expresion");
+    :}
+    |instrucciones IDENTIFICADOR:a MENOS FLECHA expresion_regular:b PTCOMA 
+    {:
+            parser.nombre_dot=a;
+            parser.numera_hoja++;
+            Nodo aceptacion = new Nodo(null,null, "#", parser.contId+2,parser.numera_hoja,"N");
+            Nodo concatenacion = new Nodo(b,aceptacion, ".", parser.contId+1);
+            nodo_datos.llenar_datos_concatenacion(concatenacion,b,aceptacion);
+            
+            
+            
+            //parser.Raiz = concatenacion;
+            System.out.println("Aqui en primer: Nomde_dot=: "+parser.nombre_dot);
+            graficarArbol(concatenacion,parser.nombre_dot);
+            parser.contId =0;
+            parser.numera_hoja =0;
+            //parser.nombre_dot = "";
+            RESULT=concatenacion;
+     
+            // System.out.println("Nomde_dot=: "+parser.nombre_dot);
+            //RESULT=b;
+    :}
+    |instrucciones DPORCENTAJE DPORCENTAJE DPORCENTAJE DPORCENTAJE
+    |IDENTIFICADOR DOSPUNTOS CADENA PTCOMA
+    |instrucciones IDENTIFICADOR DOSPUNTOS CADENA PTCOMA
+    |error
 
-    //parser.AST=a;
-:}
-;
-bloques::=
-     bloques LLAVEIZQ bloque LLAVEDER
-     |LLAVEIZQ bloque:a LLAVEDER {:RESULT=a;:}
-;
-bloque::= instrucciones:a
-{:RESULT=a;:}
-;
-
-instrucciones ::= 
-  instrucciones:a instruccion:b {::}
- |instruccion:a {:RESULT=a;:}
+// instrucciones:a instruccion:b {::}
+ //|instruccion:a {://RESULT=a;:}
 ; 
 
-instruccion::= 
-  RCONJ:a DOSPUNTOS:b IDENTIFICADOR:c MENOS:d FLECHA tipo:f PTCOMA{::}
- |IDENTIFICADOR MENOS FLECHA lista_expresion:a PTCOMA{:RESULT=a;:}
- |DPORCENTAJE DPORCENTAJE DPORCENTAJE DPORCENTAJE
- |comprobar
- |error
+letras_min::= letras_min COMA RLETRAMIN 
+              |RLETRAMIN
+                   
 ;
 
-tipo::= 
-     RLETRAMIN:a ALCANCE:b RLETRAMIN:c{::}
-    |RLETRAMAY:a ALCANCE:b RLETRAMAY:c {::}
-    |RNUMERO:a ALCANCE:b RNUMERO:c {::}
-    |RLETRAMIN
-    |RLETRAMAY
-    |RNUMERO
-    |COMA
+letras_may::= letras_may COMA RLETRAMAY
+              |RLETRAMAY
+                   
+;
+lista_numeros::= lista_numeros COMA RNUMERO
+              |RNUMERO
+                   
 ;
 
-lista_expresion::=
-        lista_expresion:a expresion_regular:b {::}
-        |expresion_regular:a 
-        {:
-            Nodo aceptacion = new Nodo(null,null, "#", parser.contId+2);
-            Nodo concatenacion = new Nodo(a,aceptacion, ".", parser.contId+1);
-            
-            RESULT=concatenacion;
-            //RESULT=a;
-            parser.Raiz = concatenacion;
-            graficarArbol(concatenacion,"expresiones");
-        :}
-;
-//| {letra} {digito};
+
 expresion_regular::=
+    //| {letra} {digito};
     OR:c expresion_regular:a expresion_regular:b 
     {:
         //Expresion a|b;
-                Nodo nuevaOr = new Nodo(a, b, "|", parser.contId);
+                Nodo nuevaOr = new Nodo(a, b, "\\|", parser.contId);
+                nodo_datos.llenar_datos_or(nuevaOr,a,b);
                 parser.contId++;
                 RESULT = nuevaOr;
-                System.out.print(a+" "+c+" "+b);
+                
     :}
+    //Expresion a.b;
     |CONCAT:c expresion_regular:a expresion_regular:b
     {:
-    //Expresion a.b;
-                Nodo nuevaConcat = new Nodo(a, b, ".", parser.contId);
+    
+                Nodo nuevaConcat = new Nodo(a,b, ".", parser.contId);
+                nodo_datos.llenar_datos_concatenacion(nuevaConcat,a,b);
                 parser.contId++;
                 RESULT = nuevaConcat;
                 System.out.print(c);
     :}
+    //Expresion a*;
     |POR:c expresion_regular:a
     {:
-        //Expresion a*;
+    
                 Nodo nuevaPor = new Nodo(a,null,c, parser.contId);
+                nodo_datos.llenar_datos_aste_y_interr(nuevaPor,a);
+                
                 parser.contId++;
                 RESULT = nuevaPor;
-                System.out.print(c);
+                System.out.println(c);
     :}
+    //Expresion a?;
     |INTER:b expresion_regular:a
     {:
-        //Expresion a?;
+        
                 Nodo nuevaInter = new Nodo(a,null,b, parser.contId);
+                nodo_datos.llenar_datos_aste_y_interr(nuevaInter,a);
                 parser.contId++;
                 RESULT = nuevaInter;
                 
     :}
+    //Expresion a+;
     |MAS:b expresion_regular:a
     {:
-        //Expresion a+;
-                Nodo nuevaInter = new Nodo(a,null,b, parser.contId);
+        
+                Nodo nuevaMas = new Nodo(a,null,b, parser.contId);
+                nodo_datos.llenar_datos_mas(nuevaMas,a);
                 parser.contId++;
-                RESULT = nuevaInter;
+                RESULT = nuevaMas;
                 
     :}
+    //Expresion identificador;
     |LLAVEIZQ IDENTIFICADOR:a LLAVEDER
     {:
-    //Expresion identificador;
-                Nodo nuevaIdent = new Nodo(null,null,a, parser.contId);
+    
+                parser.numera_hoja++;
+                Nodo nuevaIdent = new Nodo(null,null,a, parser.contId,parser.numera_hoja,"N");
                 parser.contId++;
                 RESULT = nuevaIdent;
-                System.out.print(a+" ");
-    :}
-    |GBAJO:a
-    {:
-        //Expresion "_";
-                Nodo nuevaGuion = new Nodo(null, null,"\\\""+a.substring(1,a.length()-1)+"\\\"", parser.contId);
+                System.out.print(a);
                 
+    :}
+    //Expresion CADENA;
+    |CADENA:a
+    {:
+        
+                parser.numera_hoja++;
+                Nodo nuevaGuion = new Nodo(null, null,"\\\""+a+"\\\"", parser.contId,parser.numera_hoja,"N");
                 parser.contId++;
                 RESULT = nuevaGuion;
                 System.out.print(a);
-    :}
-    |PUNTO:a
-    {:
-        //Expresion ".";
-                //Nodo nuevaPunto = new Nodo(null, null,"\""+a+"\"", parser.contId);
-                Nodo nuevaPunto = new Nodo(null, null,"\\\""+a.substring(1,a.length()-1)+"\\\"", parser.contId);
-                parser.contId++;
-                RESULT = nuevaPunto;
-                System.out.print(a);
-    :}
-    
+    :}    
 ;
 
-comprobar::=
-    IDENTIFICADOR DOSPUNTOS CADENA PTCOMA
-;
-/*
-expresion_regular::=
-    CONCAT:a {:RESULT=a;:}
-    |LLAVEIZQ:a IDENTIFICADOR:b LLAVEDER:c {::}
-    |MAS:a {::}
-    |POR:a {::}
-    |OR:a {::}
-    |INTER:a {::}
-    |CADENA:a {::}
-;
-*/

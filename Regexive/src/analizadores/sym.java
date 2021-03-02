@@ -34,6 +34,7 @@ public class sym {
   public static final int error = 1;
   public static final int IDENTIFICADOR = 20;
   public static final int INTER = 14;
+  public static final int EARROBA = 30;
   public static final int ADMI = 24;
   public static final int MAS = 8;
   public static final int RNUMERO = 23;
@@ -68,7 +69,8 @@ public class sym {
   "NUME",
   "DOLAR",
   "ANDD",
-  "SIMBOLS"
+  "SIMBOLS",
+  "EARROBA"
   };
 }
 
