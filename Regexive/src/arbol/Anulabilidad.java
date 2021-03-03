@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package arbol;
-import analizadores.*;
+//import analizadores.*;
 
 import java.util.LinkedList;
 
@@ -23,7 +23,7 @@ public class Anulabilidad {
     
     }
     
-   public void llenar_datos_concatenacion(Nodo nuevaConcat,Nodo a,Nodo b)
+   public void llenar_datos_concatenacion(LinkedList<Siguientes> lista_siguientes,Nodo nuevaConcat,Nodo a,Nodo b)
    {
                   //calcular anulable
                   if(a!=null && b!=null)
@@ -98,11 +98,11 @@ public class Anulabilidad {
                     
                     for (int j = 0; j <b.getPrimeros().size(); j++) {
                        
-                        for (int k = 0; k <Sintactico.lista_siguientes.size(); k++) {
+                        for (int k = 0; k <lista_siguientes.size(); k++) {
                             
-                            if(temp_ultimo_a.get(i).equals(Sintactico.lista_siguientes.get(k).getId_hoja()))
+                            if(temp_ultimo_a.get(i).equals(lista_siguientes.get(k).getId_hoja()))
                             {
-                                Sintactico.lista_siguientes.get(k).addSiguientes(temp_prim.get(j));
+                                lista_siguientes.get(k).addSiguientes(temp_prim.get(j));
                                 System.out.println("");
                             }
                     
@@ -168,7 +168,7 @@ public class Anulabilidad {
    
    }//fin del metodo llenar datos or
    
-   public void llenar_datos_aste(Nodo nuevaPor,Nodo a)
+   public void llenar_datos_aste(LinkedList<Siguientes> lista_siguientes,Nodo nuevaPor,Nodo a)
    {
                 //calculando anulabilidad
                 nuevaPor.setAnulable("A");
@@ -195,11 +195,11 @@ public class Anulabilidad {
             
                      for (int j = 0; j <a.getPrimeros().size(); j++) {
                          
-                         for (int k = 0; k <Sintactico.lista_siguientes.size(); k++) {
+                         for (int k = 0; k <lista_siguientes.size(); k++) {
                             
-                            if(temp_ultimo_a.get(i).equals(Sintactico.lista_siguientes.get(k).getId_hoja()))
+                            if(temp_ultimo_a.get(i).equals(lista_siguientes.get(k).getId_hoja()))
                             {
-                                Sintactico.lista_siguientes.get(k).addSiguientes(temp_prim.get(j));
+                                lista_siguientes.get(k).addSiguientes(temp_prim.get(j));
                             }
                     
                         }
@@ -230,7 +230,7 @@ public class Anulabilidad {
 
    }   
        
-   public void llenar_datos_mas(Nodo nuevaMas,Nodo a){
+   public void llenar_datos_mas(LinkedList<Siguientes> lista_siguientes,Nodo nuevaMas,Nodo a){
        
         //calcular anulabilidad
         if(a.getAnulable().equals("A"))
@@ -266,10 +266,10 @@ public class Anulabilidad {
             for (int j = 0; j <a.getPrimeros().size(); j++) {
             
                  
-                    for (int k = 0; k <Sintactico.lista_siguientes.size(); k++) {
-                        if(temp_ultimo_a.get(i).equals(Sintactico.lista_siguientes.get(k).getId_hoja()))
+                    for (int k = 0; k <lista_siguientes.size(); k++) {
+                        if(temp_ultimo_a.get(i).equals(lista_siguientes.get(k).getId_hoja()))
                         {
-                            Sintactico.lista_siguientes.get(k).addSiguientes(temp_primero_a.get(j));
+                            lista_siguientes.get(k).addSiguientes(temp_primero_a.get(j));
                         }
                     
                     }

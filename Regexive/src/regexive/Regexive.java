@@ -5,6 +5,7 @@
  */
 package regexive;
 import arbol.*;
+import java.util.LinkedList;
 
 /**
  *
@@ -17,6 +18,7 @@ public class Regexive {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
         
        
         Grafica graf= null;

@@ -282,10 +282,13 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
      //mis variables
+      
+
       public static Anulabilidad nodo_datos = new Anulabilidad();
-      public static LinkedList<Siguientes> lista_siguientes = new LinkedList<Siguientes>();
+      public static LinkedList<Siguientes> lista_siguientes = new LinkedList<>();
+      
      //-------------------------------------
-     
+     public  static Transiciones transiciones = new Transiciones();
      public static String nombre_dot= "-1";
      public static int numera_hoja = 0;
      public static int contId=0;//estabas en 1
@@ -638,15 +641,19 @@ class CUP$Sintactico$actions {
             Nodo aceptacion = new Nodo(null,null, "#", parser.contId+2,parser.numera_hoja,"N");
             parser.lista_siguientes.add(new Siguientes("#",String.valueOf(parser.numera_hoja)));
             Nodo concatenacion = new Nodo(b,aceptacion, ".", parser.contId+1);
-            nodo_datos.llenar_datos_concatenacion(concatenacion,b,aceptacion);
+            parser.nodo_datos.llenar_datos_concatenacion(parser.lista_siguientes,concatenacion,b,aceptacion);
+            
+            //codigo de transiciones
+            parser.transiciones.tabla_transiciones(parser.lista_siguientes.size(),parser.lista_siguientes,concatenacion.getPrimeros());
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
             graficarSiguientes(parser.lista_siguientes,parser.nombre_dot+"Sig");
+
             parser.contId =0;
             parser.numera_hoja =0;
-            //parser.lista_siguientes = new LinkedList<>();;
-            //parser.nombre_dot = "";
+            parser.lista_siguientes = new LinkedList<>();
+            parser.nombre_dot = "";
             RESULT=concatenacion;
      
             // System.out.println("Nomde_dot=: "+parser.nombre_dot);
@@ -674,7 +681,11 @@ class CUP$Sintactico$actions {
             parser.lista_siguientes.add(new Siguientes("#",String.valueOf(parser.numera_hoja)));
 
             Nodo concatenacion = new Nodo(b,aceptacion, ".", parser.contId+1);
-            nodo_datos.llenar_datos_concatenacion(concatenacion,b,aceptacion);
+            parser.nodo_datos.llenar_datos_concatenacion(parser.lista_siguientes,concatenacion,b,aceptacion);
+
+            //codigo de transiciones
+            parser.transiciones.tabla_transiciones(parser.lista_siguientes.size(),parser.lista_siguientes,concatenacion.getPrimeros());
+            
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
@@ -682,7 +693,8 @@ class CUP$Sintactico$actions {
             
             parser.contId =0;
             parser.numera_hoja =0;
-            //parser.lista_siguientes = new LinkedList<>();
+            parser.lista_siguientes = new LinkedList<>();
+            parser.nombre_dot = "";
             RESULT=concatenacion;
      
     
@@ -1057,7 +1069,7 @@ class CUP$Sintactico$actions {
 		
         //Expresion a|b;
                 Nodo nuevaOr = new Nodo(a, b, "\\|", parser.contId);
-                nodo_datos.llenar_datos_or(nuevaOr,a,b);
+                parser.nodo_datos.llenar_datos_or(nuevaOr,a,b);
                 parser.contId++;
                 RESULT = nuevaOr;
                 
@@ -1082,7 +1094,7 @@ class CUP$Sintactico$actions {
 		
     
                 Nodo nuevaConcat = new Nodo(a,b, ".", parser.contId);
-                nodo_datos.llenar_datos_concatenacion(nuevaConcat,a,b);
+                parser.nodo_datos.llenar_datos_concatenacion(parser.lista_siguientes,nuevaConcat,a,b);
                 parser.contId++;
                 //posee singuente
                 //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo b a su SiguientePos
@@ -1106,7 +1118,7 @@ class CUP$Sintactico$actions {
 		
     
                 Nodo nuevaPor = new Nodo(a,null,c, parser.contId);
-                nodo_datos.llenar_datos_aste(nuevaPor,a);
+                parser.nodo_datos.llenar_datos_aste(parser.lista_siguientes,nuevaPor,a);
                 parser.contId++;
                 
                 RESULT = nuevaPor;
@@ -1129,7 +1141,7 @@ class CUP$Sintactico$actions {
 		
         
                 Nodo nuevaInter = new Nodo(a,null,b, parser.contId);
-                nodo_datos.llenar_datos_interr(nuevaInter,a);
+                parser.nodo_datos.llenar_datos_interr(nuevaInter,a);
                 parser.contId++;
                 RESULT = nuevaInter;
                 
@@ -1151,7 +1163,7 @@ class CUP$Sintactico$actions {
 		
         
                 Nodo nuevaMas = new Nodo(a,null,b, parser.contId);
-                nodo_datos.llenar_datos_mas(nuevaMas,a);
+                parser.nodo_datos.llenar_datos_mas(parser.lista_siguientes,nuevaMas,a);
                 parser.contId++;
                 
                 RESULT = nuevaMas;
