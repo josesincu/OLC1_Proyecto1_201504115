@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 package regexive;
-import analizadores.*;
+import analizadores.Lexico;
+import analizadores.Sintactico;
+import analizadores.sym;
+
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -207,19 +210,16 @@ public class Grafica extends javax.swing.JFrame {
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here: 
+        Sintactico pars;
         try {
-            analizadores.Sintactico pars;
-            pars=new analizadores.Sintactico(new analizadores.Lexico(new BufferedReader( new StringReader(txtEntrdada.getText()))));
-            pars.parse();        
+            
+            pars=new Sintactico(new Lexico(new BufferedReader( new StringReader(txtEntrdada.getText()))));
+            pars.parse();     
             //AST_arbolSintaxisAbstracta=pars.getAST();
-            //**************
-       
-            
-            
-            
+            //*************           
             
         } catch (Exception ex) {
-            System.out.println("Error fatal en compilación de entrada.");
+            System.out.println("Error fatal en compilación de entrada: "+ex);
         } 
         //ejecutarAST(AST_arbolSintaxisAbstracta);
         

@@ -75,13 +75,5 @@ public class Siguientes {
     
     }
     
-    public void mas_astSig(Nodo raiz,Nodo a)
-    {
-        
-    }
-    
-    public void concatenacionSig(Nodo raiz,Nodo a, Nodo b)
-    {
-    } 
-        
+     
 }

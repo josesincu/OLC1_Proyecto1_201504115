@@ -4,15 +4,23 @@
  */
 
 package analizadores; 
-import arbol.*;
+import arbol.Anulabilidad;
+import arbol.Conjunto_Simbolos;
+import arbol.Exp_reg;
+import arbol.Instruccion;
+import arbol.Nodo;
+import arbol.Siguientes;
+import arbol.Tabla_Conjunto;
+import arbol.Transiciones;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 
-//import java_cup.runtime.*;
+
 import java_cup.runtime.*;
+
 
 parser code 
 {:
@@ -21,9 +29,10 @@ parser code
 
       public static Anulabilidad nodo_datos = new Anulabilidad();
       public static LinkedList<Siguientes> lista_siguientes = new LinkedList<>();
+      public static Transiciones transicion = new Transiciones();
       
      //-------------------------------------
-     public  static Transiciones transiciones = new Transiciones();
+     
      public static String nombre_dot= "-1";
      public static int numera_hoja = 0;
      public static int contId=0;//estabas en 1
@@ -182,7 +191,7 @@ parser code
     }  
     
    
-:} 
+:};
 
 
 
@@ -281,7 +290,7 @@ instrucciones ::=
             parser.nodo_datos.llenar_datos_concatenacion(parser.lista_siguientes,concatenacion,b,aceptacion);
             
             //codigo de transiciones
-            parser.transiciones.tabla_transiciones(parser.lista_siguientes.size(),parser.lista_siguientes,concatenacion.getPrimeros());
+            parser.transicion.tabla_transiciones(parser.lista_siguientes,concatenacion.getPrimeros());
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
@@ -308,7 +317,7 @@ instrucciones ::=
             parser.nodo_datos.llenar_datos_concatenacion(parser.lista_siguientes,concatenacion,b,aceptacion);
 
             //codigo de transiciones
-            parser.transiciones.tabla_transiciones(parser.lista_siguientes.size(),parser.lista_siguientes,concatenacion.getPrimeros());
+           parser.transicion.tabla_transiciones(parser.lista_siguientes,concatenacion.getPrimeros());
             
             
             
