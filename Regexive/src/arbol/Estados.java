@@ -14,6 +14,34 @@ import java.util.LinkedList;
 public class Estados {
 
     /**
+     * @return the nombre_hoja
+     */
+    public String getNombre_hoja() {
+        return nombre_hoja;
+    }
+
+    /**
+     * @param nombre_hoja the nombre_hoja to set
+     */
+    public void setNombre_hoja(String nombre_hoja) {
+        this.nombre_hoja = nombre_hoja;
+    }
+
+    /**
+     * @return the estadoAceptacion
+     */
+    public String getEstadoAceptacion() {
+        return estadoAceptacion;
+    }
+
+    /**
+     * @param estadoAceptacion the estadoAceptacion to set
+     */
+    public void setEstadoAceptacion(String estadoAceptacion) {
+        this.estadoAceptacion = estadoAceptacion;
+    }
+
+    /**
      * @return the nombre_estado
      */
     public String getNombre_estado() {
@@ -47,18 +75,24 @@ public class Estados {
     }
     private String nombre_estado;
     private LinkedList<String> estado;
+    private String nombre_hoja;
+    private String estadoAceptacion;
     
-    public Estados(String nombre_es)
+    public Estados(String nombre_es,String nombr_hoj, String estaAcep)
     {
         this.nombre_estado = nombre_es;
         this.estado = new LinkedList<>();
+        this.nombre_hoja = nombr_hoj;
+        this.estadoAceptacion = estaAcep;
     
     }
     
-    public Estados(String nombre_estad,LinkedList<String> estado)
+    public Estados(String nombre_estad,LinkedList<String> estado,String nombr_hoj, String estaAcep)
     {
         this.nombre_estado = nombre_estad;
         this.estado = estado;
+        this.nombre_hoja = nombr_hoj;
+        this.estadoAceptacion = estaAcep;
         
     }
     

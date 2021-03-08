@@ -5,6 +5,8 @@
  */
 package arbol;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 
 /**
@@ -62,7 +64,7 @@ public class Transiciones {
         for (int i = 0; i <fila; i++) {
             
             for (int j = 0; j <columna; j++) {
-                matrix[i][j]= new Estados("-1");//indica que la matrix esta vacia
+                matrix[i][j]= new Estados("-1","-1","-1");//indica que la matrix esta vacia
             }
         }
         
@@ -74,13 +76,15 @@ public class Transiciones {
         //se le asigna el estado incial de la matriz
         matrix[1][0].setNombre_estado("S"+contar_estado);
         matrix[1][0].setEstado(primeros);
-        lista_estado.add(new Estados("S"+contar_estado,primeros));
+        
+        lista_estado.add(new Estados("S"+contar_estado,primeros,lista_siguientes.getFirst().getNombre_hoja(),estadoAceptacion(primeros)));
         
         //llamando  al metod para trabajr con los estado
         llenarTransiciones(matrix);
         verificar_estadoNuevos();
         imprimirValores();
-        //imprimirTablaSiguientes();
+        verListaEstado();
+        
         System.out.println("");
             
                  
@@ -147,7 +151,7 @@ public class Transiciones {
         cont_fila++;
     }//fin de verificar objeto
     
-    public void llenar_EstadoColum(String valor,LinkedList<String> estad_transi,String nombreEst)
+    public void llenar_EstadoColum(String nombre_hoja,LinkedList<String> estad_transi,String nombreEst)
     {
         int fila =0;
         int columna = 0;
@@ -163,7 +167,7 @@ public class Transiciones {
         
         for (int i = 0; i <temp_encabezado.size(); i++) {
             
-            if(temp_encabezado.get(i).getLetra().equals(valor))
+            if(temp_encabezado.get(i).getLetra().equals(nombre_hoja))
             {
                 
                 fila = temp_encabezado.get(i).getFila()+cont_fila;
@@ -183,6 +187,7 @@ public class Transiciones {
         if(encontrado == true){
               
                     if(asignado == false){
+                         
                      if(matrix[fila][columna].getNombre_estado().equals("-1") && !(verificarEstado(estad_transi)))
                         {
                             //!verdadero  falso
@@ -191,8 +196,10 @@ public class Transiciones {
                         contar_estado++;
                         matrix[fila][columna].setNombre_estado("S"+contar_estado);
                         matrix[fila][columna].setEstado(estad_transi);
+                        matrix[fila][columna].setNombre_hoja(nombre_hoja);
+                        matrix[fila][columna].setEstadoAceptacion(estadoAceptacion(estad_transi));
                         
-                        lista_estado.add(new Estados("S"+contar_estado,estad_transi));
+                        lista_estado.add(new Estados("S"+contar_estado,estad_transi,nombre_hoja,estadoAceptacion(estad_transi)));
                         
                         System.out.println("\t["+fila+"]["+columna+"]: "+matrix[fila][columna].getNombre_estado());
                         //return;
@@ -208,6 +215,9 @@ public class Transiciones {
                                 
                                 matrix[fila][columna].setNombre_estado(nombreEst);
                                 matrix[fila][columna].setEstado(estad_transi);
+                                matrix[fila][columna].setNombre_hoja(nombre_hoja);
+                                matrix[fila][columna].setEstadoAceptacion(estadoAceptacion(estad_transi));
+                                
                                 System.out.println("\t["+fila+"]["+columna+"]: "+matrix[fila][columna].getNombre_estado());
                                 return;
                             }
@@ -245,8 +255,11 @@ public class Transiciones {
         for (int i = 2; i <lista_estado.size()+1; i++) {
             if(matrix[i][0].getNombre_estado().equals("-1"))
             {
-                matrix[i][0].setEstado(lista_estado.get(i-1).getEstado());
+                
                 matrix[i][0].setNombre_estado(lista_estado.get(i-1).getNombre_estado());
+                matrix[i][0].setEstado(lista_estado.get(i-1).getEstado());
+                matrix[i][0].setNombre_hoja(lista_estado.get(i-1).getNombre_hoja());
+                matrix[i][0].setEstadoAceptacion(lista_estado.get(i-1).getEstadoAceptacion());
                 // borrar aqui si no funcion //crear_estados(lista_estado.get(i-1).getEstado());
                 crear_estados(matrix[i][0]);
             }
@@ -261,7 +274,11 @@ public class Transiciones {
         //imprimiendo la matrix
         for (int i = 0; i <fila; i++) {
             for (int j = 0; j <columna; j++) {
-                System.out.print("\t"+matrix[i][j].getNombre_estado());
+                //System.out.print("\t"+matrix[i][j].getNombre_estado());
+                //System.out.print("\tEstado"+matrix[i][j].getEstado());
+                //System.out.print("\tNombre_Hoja:"+matrix[i][j].getNombre_hoja());
+                System.out.print("\tEstadoAceptacion:"+matrix[i][j].getEstadoAceptacion());
+                //System.out.println("");
             }
             System.out.println("");
         }
@@ -278,4 +295,240 @@ public class Transiciones {
             System.out.print("\tList_Siguientes:"+lista_siguientes.get(i).getSiguientes());
         }
     }
-}
+    
+    
+    public String estadoAceptacion(LinkedList<String> estado_actual)
+    {
+        String temp = "NO";
+        
+             
+                if(estado_actual.getLast().equals(lista_siguientes.getLast().getId_hoja()) &&lista_siguientes.getLast().getNombre_hoja().equals("#"))
+                {
+                    temp = "SI";
+                    
+                    
+                 }
+            
+                  // System.out.println("ESTO_ACEPTACION: "+temp); 
+   
+        return temp;
+    }
+    
+    
+    public int contarFilasUsadas()
+    {
+        int filas_usadas =0;
+        
+        for (int i = 0; i<fila; i++) {
+            if(!(matrix[i][0].getNombre_estado().equals("-1")))
+            {
+                filas_usadas++;
+                //System.out.println("ContarUsado:"+filas_usadas);
+            }
+        }
+        return fila-filas_usadas;
+    }
+    
+    public  void graficarTransiciones(String nombre){
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" + nombre + ".dot");
+            pw = new PrintWriter(fichero);
+            pw.println("digraph G{");
+            pw.println("rankdir=LR");
+            pw.println("node[shape=plaintext]");
+            //******
+            pw.println("b[ label = <<TABLE BORDER=\"0\" "
+                    + "CELLBORDER=\"1\" CELLSPACING=\"0\""
+                    + " CELLPADDING=\"4\" BGCOLOR=\"green\">"
+                    );
+            
+            //para encabezados
+            pw.println("<TR>");
+            for (int i = 0; i <columna-1; i++) {
+                    pw.println("\n"+
+                            "<TD>"+matrix[0][i].getNombre_estado()+"</TD>"+"\n");
+                }
+            pw.println("</TR>");
+            
+            int temp_column = 0;
+            
+            for(int i=1; i<fila-contarFilasUsadas();i++)
+            {
+                    
+                    pw.println("<TR>");
+                    for (int j = 0; j <columna-1; j++) {
+                    
+                       
+                        if(!(matrix[i][j].getNombre_estado().equals("-1")))
+                        {
+                            pw.println("\n"+
+                            "<TD>"+matrix[i][j].getNombre_estado()+matrix[i][j].getEstado()+"</TD>"+"\n");
+                        }else
+                        {
+                             pw.println("\n"+
+                            "<TD>"+"----"+"</TD>"+"\n");
+                        }
+                        
+                    
+                    }
+                    pw.println("</TR>");
+               
+               // temp_column++;
+            
+            }
+            pw.println("</TABLE> >]");
+            //*********
+            pw.println("}");
+
+        } catch (Exception e) {
+            System.out.println("error, no se realizo el archivo");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+
+        //para compilar el archivo dot y obtener la imagen
+        try {
+            //dirección doonde se ecnuentra el compilador de graphviz
+          
+            String dotPath="dot";
+            //dirección del archivo dot
+            String fileInputPath = "//home/dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+ nombre + ".dot";
+            //dirección donde se creara la magen
+            String fileOutputPath = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" +nombre+ ".jpg";
+            //tipo de conversón
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            //dot -Tjpg filename.dot -o outfile.jpg
+
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        }
+    } //fin de metodo Graficar
+    
+          public  void graficarAFN(String nombre){
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" + nombre + ".dot");
+            pw = new PrintWriter(fichero);
+            pw.println("digraph G{");
+            pw.println("rankdir=LR");
+            pw.println("node[shape=circle]");
+            //******
+            
+            int temp_col = 0;
+            boolean color_estado;
+            
+            for (int i = 1; i <fila-contarFilasUsadas(); i++) {
+                //S3[style=filled,	fillcolor = "green"]
+                
+                color_estado = false;
+                
+                for (int j = 1; j <columna; j++) {
+                    
+                    if(!matrix[i][temp_col].getNombre_estado().equals("-1"))
+                    {
+                        if(matrix[i][temp_col].getEstadoAceptacion().equals("SI") && color_estado == false)
+                        {
+                        //S3[style=filled,	fillcolor = "green"]
+                            pw.println(matrix[i][temp_col].getNombre_estado()+"[style=filled,  fillcolor = \"green\"]");
+                            color_estado = true;
+                        }
+                
+                        if(!(matrix[i][j].getNombre_estado().equals("-1")))
+                        {
+                            pw.println(matrix[i][temp_col].getNombre_estado()+"->"+matrix[i][j].getNombre_estado()+"[label=\""+matrix[i][j].getNombre_hoja()+"\"]");
+                        }
+                
+                    }
+                }
+               
+                
+            }
+            
+            
+            //*********
+            //cerrar archivo
+            pw.println("}");
+
+        } catch (Exception e) {
+            System.out.println("error, no se realizo el archivo");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+
+        //para compilar el archivo dot y obtener la imagen
+        try {
+            //dirección doonde se ecnuentra el compilador de graphviz
+          
+            String dotPath="dot";
+            //dirección del archivo dot
+            String fileInputPath = "//home/dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+ nombre + ".dot";
+            //dirección donde se creara la magen
+            String fileOutputPath = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" +nombre+ ".jpg";
+            //tipo de conversón
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            //dot -Tjpg filename.dot -o outfile.jpg
+
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        }
+    } //fin de metetodo graficar AFN
+          
+          
+          public void verListaEstado(){
+              for (Estados est : lista_estado) {
+                  
+                  System.out.print("\tNombre_Estado:"+est.getNombre_estado());
+                  System.out.print("\tEstado:"+est.getEstado());
+                  System.out.print("\tNombre_Hoja:"+est.getNombre_hoja());
+                  System.out.print("\tEstadoAceptacion:"+est.getEstadoAceptacion());
+                  System.out.println("");
+              }
+          
+          }
+          
+}//fin de clase transiciones

@@ -653,6 +653,8 @@ class CUP$Sintactico$actions {
             
             //codigo de transiciones
             parser.transicion.tabla_transiciones(parser.lista_siguientes,concatenacion.getPrimeros());
+            parser.transicion.graficarTransiciones(a);
+            parser.transicion.graficarAFN(a+1);
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
@@ -693,6 +695,8 @@ class CUP$Sintactico$actions {
 
             //codigo de transiciones
            parser.transicion.tabla_transiciones(parser.lista_siguientes,concatenacion.getPrimeros());
+           parser.transicion.graficarTransiciones(a);
+           parser.transicion.graficarAFN(a+1);
             
             
             
