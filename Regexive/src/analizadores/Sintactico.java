@@ -668,14 +668,18 @@ class CUP$Sintactico$actions {
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
-            graficarSiguientes(parser.lista_siguientes,parser.nombre_dot+"Sig");
+            graficarSiguientes(parser.lista_siguientes,parser.nombre_dot);
 
             parser.contId =0;
             parser.numera_hoja =0;
 
-            parser.lista_siguientes = new LinkedList<>();
-            parser.transicion = new Transiciones();
-            parser.thompson = new Thompson();
+            //parser.lista_siguientes = new LinkedList<>();
+            //parser.transicion = new Transiciones();
+            //parser.thompson = new Thompson();
+
+            parser.lista_siguientes = null;
+            parser.transicion = null;
+            parser.thompson = null;
 
             parser.nombre_dot = "";
             RESULT=concatenacion;
@@ -719,14 +723,18 @@ class CUP$Sintactico$actions {
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
-            graficarSiguientes(parser.lista_siguientes,parser.nombre_dot+"Sig");
+            graficarSiguientes(parser.lista_siguientes,parser.nombre_dot);
             
             parser.contId =0;
             parser.numera_hoja =0;
 
-            parser.lista_siguientes = new LinkedList<>();
-            parser.transicion = new Transiciones();
-            parser.thompson = new Thompson();
+            //parser.lista_siguientes = new LinkedList<>();
+            //parser.transicion = new Transiciones();
+            //parser.thompson = new Thompson();
+            
+            parser.lista_siguientes = null;
+            parser.transicion = null;
+            parser.thompson = null;
 
             parser.nombre_dot = "";
             RESULT=concatenacion;
