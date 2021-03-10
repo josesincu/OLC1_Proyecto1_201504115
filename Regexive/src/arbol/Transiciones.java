@@ -126,23 +126,19 @@ public class Transiciones {
         //for funcional
         for (int i = 0; i <recorrerEstado.size(); i++) {
             //EstadoS1 [2,3,4,5]
-            System.out.println("Follow: "+recorrerEstado.get(i));
+            
             
             for (int j = 0; j <lista_siguientes.size(); j++) {
                   
                 
                 if(recorrerEstado.get(i).equals(lista_siguientes.get(j).getId_hoja()) )
                 {
-                    System.out.print("\tEstado: "+recorrerEstado.get(i)+"->"+lista_siguientes.get(j).getId_hoja()+
-                            "\tCaracter: "+lista_siguientes.get(j).getNombre_hoja()
-                    +"\tSinguientes:"+lista_siguientes.get(j).getSiguientes());
-                    System.out.println("");
                     
                     if(!(lista_siguientes.get(j).getSiguientes().isEmpty()))
                     {
                         llenar_EstadoColum(lista_siguientes.get(j).getNombre_hoja(),lista_siguientes.get(j).getSiguientes(),nombreEstado);
                     }
-                    break;//veficar aqui dudas
+                   break;//veficar aqui dudas
                 }
                
                 
@@ -159,13 +155,8 @@ public class Transiciones {
         int columna = 0;
         boolean encontrado = false;
         
-        for (int i = 0; i <temp_encabezado.size(); i++) {
-            System.out.println("");
-            System.out.print("\tFila:"+temp_encabezado.get(i).getFila());
-            System.out.print("\tColumna:"+temp_encabezado.get(i).getColumna());
-            System.out.print("\tLetra:"+temp_encabezado.get(i).getLetra());
-            
-        }
+        System.out.println("Trabajando con estado:"+nombreEst);
+        System.out.println("Lista de Transicion:"+estad_transi);
         
         for (int i = 0; i <temp_encabezado.size(); i++) {
             
@@ -174,16 +165,12 @@ public class Transiciones {
                 
                 fila = temp_encabezado.get(i).getFila()+cont_fila;
                 columna = temp_encabezado.get(i).getColumna();
-                
-                System.out.print("\tFila: "+fila);
-                System.out.print("\tColumna: "+columna);
-                System.out.println("");
                 encontrado = true;
                 break;
             }
         }
        
-     
+        
         boolean asignado = false;
         
         if(encontrado == true){
@@ -212,11 +199,12 @@ public class Transiciones {
                         {
                          //simplemente asignarle el estado
                             //System.out.println("\tQuiere datos aquiiiiii!!");
+                            Estados temp = getEstadoVerificado(estad_transi);
                             if(matrix[fila][columna].getNombre_estado().equals("-1"))
                             {
                                 
-                                matrix[fila][columna].setNombre_estado(nombreEst);
-                                matrix[fila][columna].setEstado(estad_transi);
+                                matrix[fila][columna].setNombre_estado(temp.getNombre_estado());
+                                matrix[fila][columna].setEstado(temp.getEstado());
                                 matrix[fila][columna].setNombre_hoja(nombre_hoja);
                                 matrix[fila][columna].setEstadoAceptacion(estadoAceptacion(estad_transi));
                                 
@@ -234,7 +222,7 @@ public class Transiciones {
             
         }
         //metdo imprimir
-        imprimirValores();
+       // imprimirValores();
         
     }//fin fde metodo llenar columna
     
@@ -251,6 +239,23 @@ public class Transiciones {
         }
         return encontroEstado;
     }//fin de metodo verificar estado
+    
+    //Obtener estado verificado 
+    public Estados getEstadoVerificado(LinkedList<String> estadoVerfi)
+    {
+        Estados encontroEstado = null;
+        for (int i = 0; i <lista_estado.size(); i++) {
+            
+            if(estadoVerfi.equals(lista_estado.get(i).getEstado()))
+            {
+                encontroEstado = lista_estado.get(i);
+                break;
+            }
+        }
+        return encontroEstado;
+    }//fin de metodo verificar estado
+    
+    
         
         //verifcar si existe en columna o no ...sino agregarla y ejecutarla
     public void verificar_estadoNuevos(){
@@ -266,8 +271,10 @@ public class Transiciones {
                 // borrar aqui si no funcion //crear_estados(lista_estado.get(i-1).getEstado());
                 crear_estados(matrix[i][0]);
             }
-               
+                   
         }
+        
+       
         
     }//fin de metodo verificar_estadosNuevos
     
