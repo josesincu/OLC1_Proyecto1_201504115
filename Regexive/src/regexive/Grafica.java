@@ -10,9 +10,12 @@ import analizadores.sym;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.StringReader;
 import java.util.LinkedList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -23,13 +26,16 @@ import javax.swing.tree.DefaultTreeModel;
  * @author dark
  */
 public class Grafica extends javax.swing.JFrame {
-
+    //variable para el nombre de las carpetas
+     public static String  nombre_carpeta;
+    // public static Read_Files read_file = new Read_Files();
+    
     /**
      * Creates new form Grafica
      */
     public Grafica() {
        
-        
+        nombre_carpeta ="";
         initComponents();
     }
 
@@ -48,15 +54,15 @@ public class Grafica extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         btnAnalizar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        btnAbrirArchivo = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -80,8 +86,6 @@ public class Grafica extends javax.swing.JFrame {
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
 
-        jButton1.setText("Anterior");
-
         jButton2.setText("Siguiente");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,7 +97,7 @@ public class Grafica extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 548, Short.MAX_VALUE)
+            .addGap(0, 158, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,6 +113,8 @@ public class Grafica extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Anterior");
+
         jMenu1.setText("Archivo");
 
         jMenuItem1.setText("Nuevo Archivo");
@@ -119,8 +125,13 @@ public class Grafica extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("Abrir Archivo");
-        jMenu1.add(jMenuItem2);
+        btnAbrirArchivo.setText("Abrir Archivo");
+        btnAbrirArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirArchivoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnAbrirArchivo);
 
         jMenuItem3.setText("Guardar");
         jMenu1.add(jMenuItem3);
@@ -153,48 +164,45 @@ public class Grafica extends javax.swing.JFrame {
                         .addComponent(jScrollPane2)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(37, 37, 37)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAnalizar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(228, 228, 228)
-                        .addComponent(jButton2)
-                        .addGap(148, 148, 148))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(215, 215, 215)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(31, 31, 31)
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnAnalizar)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton2)))
+                        .addGap(144, 144, 144)
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addGap(276, 276, 276))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2)
-                                .addComponent(jButton3)
-                                .addComponent(btnAnalizar))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jButton2)
-                                .addComponent(jButton1))))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 54, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3)
+                            .addComponent(btnAnalizar)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -210,6 +218,7 @@ public class Grafica extends javax.swing.JFrame {
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here: 
+        this.crearCarpetas();
         Sintactico pars;
         try {
             
@@ -225,6 +234,101 @@ public class Grafica extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
+    private void btnAbrirArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirArchivoActionPerformed
+        // TODO add your handling code here:
+        txtEntrdada.setText("");
+        try
+            {
+                /**llamamos el metodo que permite cargar la ventana*/
+                JFileChooser file=new JFileChooser();
+                file.showOpenDialog(this);
+                /**abrimos el archivo seleccionado*/
+                String abre=file.getSelectedFile().toString();
+                String temp = file.getSelectedFile().getName();
+                nombre_carpeta = temp.substring(0,temp.length()-4);
+                crearCarpetas();
+                FileReader fr = null;
+                BufferedReader br = null;
+                
+                try {
+                // Apertura del fichero y creacion de BufferedReader para poder
+                // hacer una lectura comoda (disponer del metodo readLine()).
+         
+                fr = new FileReader (abre);
+                br = new BufferedReader(fr);
+
+                 // Lectura del fichero
+                String temp_valor ="";
+                String linea;
+                while((linea=br.readLine())!=null)
+                {
+                    temp_valor +=linea+"\n";
+                }
+                
+                txtEntrdada.setText(temp_valor);
+      }
+      catch(Exception e){
+         e.printStackTrace();
+      }
+                
+
+                /**recorremos el archivo, lo leemos para plasmarlo
+                *en el area de texto*/
+                if(!abre.equals(""))
+                {    
+                    System.out.println("Entro perro");
+                    ///read_file.read_file_people(abre);
+                    
+                }    
+            }
+            catch(Exception ex)
+            {
+                 JOptionPane.showMessageDialog(null,ex+"" +
+                "\nFile not found",
+                 " WARNING!!!",JOptionPane.WARNING_MESSAGE);
+            }
+    }//GEN-LAST:event_btnAbrirArchivoActionPerformed
+
+    public void crearCarpetas()
+    {
+        
+        String path = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//";
+       File directorio = new File(path+nombre_carpeta);
+       
+        if (!directorio.exists()) {
+            if (directorio.mkdirs()) {
+                System.out.println("Directorio creado");
+                
+            } else {
+                System.out.println("Error al crear directorio");
+            }
+        }
+        
+        LinkedList<String> listaCarpeta = new LinkedList<>();
+        listaCarpeta.add("AFD");
+        listaCarpeta.add("AFND");
+        listaCarpeta.add("Arboles");
+        listaCarpeta.add("Salidas");
+        listaCarpeta.add("Siguientes");
+        listaCarpeta.add("Transiciones");
+        
+        for (int i = 0; i <listaCarpeta.size(); i++) {
+            File dir = new File(path+nombre_carpeta+"//"+listaCarpeta.get(i));
+       
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                System.out.println("Directorio creado");
+                
+            } else {
+                System.out.println("Error al crear directorio");
+            }
+        }
+            
+        }
+    
+    
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -261,6 +365,7 @@ public class Grafica extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem btnAbrirArchivo;
     private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -274,7 +379,6 @@ public class Grafica extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;

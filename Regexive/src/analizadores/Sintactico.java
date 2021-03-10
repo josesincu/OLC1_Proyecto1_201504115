@@ -13,6 +13,8 @@ import arbol.Nodo;
 import arbol.Siguientes;
 import arbol.Tabla_Conjunto;
 import arbol.Transiciones;
+import arbol.Thompson;
+import regexive.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -293,7 +295,8 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
       public static Anulabilidad nodo_datos = new Anulabilidad();
       public static LinkedList<Siguientes> lista_siguientes = new LinkedList<>();
-      public static Transiciones transicion = new Transiciones();
+      public static Transiciones transicion = new Transiciones();  
+      public static Thompson thompson = new Thompson();
       
      //-------------------------------------
      
@@ -301,12 +304,14 @@ public class Sintactico extends java_cup.runtime.lr_parser {
      public static int numera_hoja = 0;
      public static int contId=0;//estabas en 1
      public static Nodo Raiz;
-    
+     private static String direccion = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//";
+     
+
      public static void graficarArbol(Nodo act, String nombre){
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("src//imagenes//" + nombre + ".dot");
+            fichero = new FileWriter(direccion+Grafica.nombre_carpeta+"//Arboles//" + nombre + ".dot");
             pw = new PrintWriter(fichero);
             pw.println("digraph G{");
             pw.println("rankdir=UD");
@@ -331,9 +336,9 @@ public class Sintactico extends java_cup.runtime.lr_parser {
           
             String dotPath="dot";
             //dirección del archivo dot
-            String fileInputPath = "src//imagenes//"+ nombre + ".dot";
+            String fileInputPath = direccion+Grafica.nombre_carpeta+"//Arboles//"+ nombre + ".dot";
             //dirección donde se creara la magen
-            String fileOutputPath = "src//imagenes//" +nombre+ ".jpg";
+            String fileOutputPath = direccion+Grafica.nombre_carpeta+"//Arboles//" +nombre+ ".jpg";
             //tipo de conversón
             String tParam = "-Tjpg";
             String tOParam = "-o";
@@ -364,7 +369,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("src//imagenes//" + nombre + ".dot");
+            fichero = new FileWriter(direccion+Grafica.nombre_carpeta+"//Siguientes//" + nombre + ".dot");
             pw = new PrintWriter(fichero);
             pw.println("digraph G{");
             pw.println("rankdir=LR");
@@ -409,9 +414,9 @@ public class Sintactico extends java_cup.runtime.lr_parser {
           
             String dotPath="dot";
             //dirección del archivo dot
-            String fileInputPath = "src//imagenes//"+ nombre + ".dot";
+            String fileInputPath = direccion+Grafica.nombre_carpeta+"//Siguientes//"+ nombre + ".dot";
             //dirección donde se creara la magen
-            String fileOutputPath = "src//imagenes//" +nombre+ ".jpg";
+            String fileOutputPath = direccion+Grafica.nombre_carpeta+"//Siguientes//"+nombre+ ".jpg";
             //tipo de conversón
             String tParam = "-Tjpg";
             String tOParam = "-o";
@@ -654,7 +659,12 @@ class CUP$Sintactico$actions {
             //codigo de transiciones
             parser.transicion.tabla_transiciones(parser.lista_siguientes,concatenacion.getPrimeros());
             parser.transicion.graficarTransiciones(a);
-            parser.transicion.graficarAFN(a+1);
+            parser.transicion.graficarAFN(a);
+            
+
+            //Metodo de Thompson
+            parser.thompson.graficarAFND(a);
+
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
@@ -662,7 +672,11 @@ class CUP$Sintactico$actions {
 
             parser.contId =0;
             parser.numera_hoja =0;
+
             parser.lista_siguientes = new LinkedList<>();
+            parser.transicion = new Transiciones();
+            parser.thompson = new Thompson();
+
             parser.nombre_dot = "";
             RESULT=concatenacion;
      
@@ -696,8 +710,12 @@ class CUP$Sintactico$actions {
             //codigo de transiciones
            parser.transicion.tabla_transiciones(parser.lista_siguientes,concatenacion.getPrimeros());
            parser.transicion.graficarTransiciones(a);
-           parser.transicion.graficarAFN(a+1);
-            
+           parser.transicion.graficarAFN(a);
+           
+           
+           //Metodo de Thompson
+           parser.thompson.graficarAFND(a);
+
             
             
             graficarArbol(concatenacion,parser.nombre_dot);
@@ -705,7 +723,11 @@ class CUP$Sintactico$actions {
             
             parser.contId =0;
             parser.numera_hoja =0;
+
             parser.lista_siguientes = new LinkedList<>();
+            parser.transicion = new Transiciones();
+            parser.thompson = new Thompson();
+
             parser.nombre_dot = "";
             RESULT=concatenacion;
      
@@ -1083,6 +1105,10 @@ class CUP$Sintactico$actions {
                 Nodo nuevaOr = new Nodo(a, b, "\\|", parser.contId);
                 parser.nodo_datos.llenar_datos_or(nuevaOr,a,b);
                 parser.contId++;
+                
+                //Metodo de Thompson
+                parser.thompson.Or(a.getValor(),b.getValor());
+                
                 RESULT = nuevaOr;
                 
     
@@ -1108,6 +1134,10 @@ class CUP$Sintactico$actions {
                 Nodo nuevaConcat = new Nodo(a,b, ".", parser.contId);
                 parser.nodo_datos.llenar_datos_concatenacion(parser.lista_siguientes,nuevaConcat,a,b);
                 parser.contId++;
+                
+                //Metodo de Thompson
+                parser.thompson.Concatenacion(a.getValor(),b.getValor());
+                
                 //posee singuente
                 //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo b a su SiguientePos
                 RESULT = nuevaConcat;
@@ -1133,6 +1163,9 @@ class CUP$Sintactico$actions {
                 parser.nodo_datos.llenar_datos_aste(parser.lista_siguientes,nuevaPor,a);
                 parser.contId++;
                 
+                //Metodo de Thompson
+                parser.thompson.Asterisco(a.getValor());
+                
                 RESULT = nuevaPor;
                 
     
@@ -1155,6 +1188,10 @@ class CUP$Sintactico$actions {
                 Nodo nuevaInter = new Nodo(a,null,b, parser.contId);
                 parser.nodo_datos.llenar_datos_interr(nuevaInter,a);
                 parser.contId++;
+
+                //Metodo de Thompson
+                parser.thompson.unaVez(a.getValor());
+
                 RESULT = nuevaInter;
                 
     
@@ -1177,6 +1214,9 @@ class CUP$Sintactico$actions {
                 Nodo nuevaMas = new Nodo(a,null,b, parser.contId);
                 parser.nodo_datos.llenar_datos_mas(parser.lista_siguientes,nuevaMas,a);
                 parser.contId++;
+
+                //Metodo de Thompson
+                parser.thompson.Mas(a.getValor());
                 
                 RESULT = nuevaMas;
                 

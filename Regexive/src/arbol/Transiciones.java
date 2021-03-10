@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package arbol;
+import regexive.*;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -55,7 +56,7 @@ public class Transiciones {
         }
         
         //creamos el tamanio correcto de la matrix
-        fila = temp_encabezado.size()*2;
+        fila = temp_encabezado.size()*7;
         columna = temp_encabezado.size();
         
         //creamos la matriz con los tamanios idicados
@@ -143,6 +144,7 @@ public class Transiciones {
                     }
                     break;//veficar aqui dudas
                 }
+               
                 
             }
             //System.out.println("");
@@ -218,7 +220,8 @@ public class Transiciones {
                                 matrix[fila][columna].setNombre_hoja(nombre_hoja);
                                 matrix[fila][columna].setEstadoAceptacion(estadoAceptacion(estad_transi));
                                 
-                                System.out.println("\t["+fila+"]["+columna+"]: "+matrix[fila][columna].getNombre_estado());
+                               
+                                
                                 return;
                             }
                             
@@ -274,10 +277,10 @@ public class Transiciones {
         //imprimiendo la matrix
         for (int i = 0; i <fila; i++) {
             for (int j = 0; j <columna; j++) {
-                //System.out.print("\t"+matrix[i][j].getNombre_estado());
+                System.out.print("\t"+matrix[i][j].getNombre_estado());
                 //System.out.print("\tEstado"+matrix[i][j].getEstado());
                 //System.out.print("\tNombre_Hoja:"+matrix[i][j].getNombre_hoja());
-                System.out.print("\tEstadoAceptacion:"+matrix[i][j].getEstadoAceptacion());
+                //System.out.print("\tEstadoAceptacion:"+matrix[i][j].getEstadoAceptacion());
                 //System.out.println("");
             }
             System.out.println("");
@@ -333,7 +336,7 @@ public class Transiciones {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" + nombre + ".dot");
+            fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+Grafica.nombre_carpeta+"//Transiciones//" + nombre + ".dot");
             pw = new PrintWriter(fichero);
             pw.println("digraph G{");
             pw.println("rankdir=LR");
@@ -400,9 +403,9 @@ public class Transiciones {
           
             String dotPath="dot";
             //dirección del archivo dot
-            String fileInputPath = "//home/dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+ nombre + ".dot";
+            String fileInputPath = "//home/dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+Grafica.nombre_carpeta+"//Transiciones//" + nombre + ".dot";
             //dirección donde se creara la magen
-            String fileOutputPath = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" +nombre+ ".jpg";
+            String fileOutputPath = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+Grafica.nombre_carpeta+"//Transiciones//"+nombre+ ".jpg";
             //tipo de conversón
             String tParam = "-Tjpg";
             String tOParam = "-o";
@@ -425,13 +428,15 @@ public class Transiciones {
             ex.printStackTrace();
         } finally {
         }
+        
+        
     } //fin de metodo Graficar
     
           public  void graficarAFN(String nombre){
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" + nombre + ".dot");
+            fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" +Grafica.nombre_carpeta+"//AFD//" + nombre + ".dot");
             pw = new PrintWriter(fichero);
             pw.println("digraph G{");
             pw.println("rankdir=LR");
@@ -491,9 +496,9 @@ public class Transiciones {
           
             String dotPath="dot";
             //dirección del archivo dot
-            String fileInputPath = "//home/dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+ nombre + ".dot";
+            String fileInputPath = "//home/dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+Grafica.nombre_carpeta+"//AFD//" + nombre + ".dot";
             //dirección donde se creara la magen
-            String fileOutputPath = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" +nombre+ ".jpg";
+            String fileOutputPath = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//" +Grafica.nombre_carpeta+"//AFD//" +nombre+ ".jpg";
             //tipo de conversón
             String tParam = "-Tjpg";
             String tOParam = "-o";
