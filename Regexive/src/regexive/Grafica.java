@@ -290,7 +290,10 @@ public class Grafica extends javax.swing.JFrame {
                     }
                 }
                 try {
-            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+"Reporte_ErroresL.html");
+                    String comn = "opera "+"//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//Reporte_ErroresL.html";
+                    Runtime html = Runtime.getRuntime();
+                    html.exec(comn);
+            
             //System.out.println("Final");
         } catch (Exception e) {
             e.printStackTrace();
@@ -340,8 +343,10 @@ public class Grafica extends javax.swing.JFrame {
                     }
                 }
                 try {
-            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+"Reporte_ErroresS.html");
-            //System.out.println("Final");
+                    String comn = "opera "+"//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//Reporte_ErroresS.html";
+                    Runtime html = Runtime.getRuntime();
+                    html.exec(comn);
+                    
         } catch (Exception e) {
             e.printStackTrace();
         }

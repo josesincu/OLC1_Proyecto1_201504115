@@ -23,6 +23,28 @@ public class Thompson {
         s = 0;
     
     }
+    
+    public void llenarDato(Nodo a,Nodo b)
+    {
+        switch(a.getValor())
+        {
+            case "|":
+                    
+                break;
+            case ".":
+                break;
+            case "*":
+                    break;
+            case "+":
+                break;
+            case "?":
+                break;
+            default:
+                break;
+           
+        }//fin de switch
+    
+    }
     public void Or(String a, String b)
     { 
         String temp =""; 

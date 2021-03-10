@@ -367,7 +367,7 @@ instrucciones ::=
     |instrucciones DPORCENTAJE DPORCENTAJE DPORCENTAJE DPORCENTAJE // % % % %
     |IDENTIFICADOR DOSPUNTOS CADENA PTCOMA 
     |instrucciones IDENTIFICADOR DOSPUNTOS CADENA PTCOMA  //nombre_expresion : cadena
-    |error
+    |error PTCOMA
 
 ; 
 
