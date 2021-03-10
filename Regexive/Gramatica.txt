@@ -1,0 +1,88 @@
+bloque::= LLAVEIZQ instrucciones:a LLAVEDER 
+;
+
+instrucciones ::= 
+    RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMIN ALCANCE RLETRAMIN PTCOMA //a~z
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMAY ALCANCE RLETRAMAY PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RLETRAMAY ALCANCE RLETRAMAY PTCOMA //A~Z
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RNUMERO ALCANCE RNUMERO PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA RNUMERO ALCANCE RNUMERO PTCOMA //1~9
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA simbolos ALCANCE simbolos PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA simbolos ALCANCE simbolos PTCOMA //!~&
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_min PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_min PTCOMA // a,b,c,d,e
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_may PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA letras_may PTCOMA //A,B,C,D
+    |RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA lista_numeros PTCOMA
+    |instrucciones RCONJ DOSPUNTOS IDENTIFICADOR MENOS FLECHA lista_numeros PTCOMA //1,2,3
+    |IDENTIFICADOR:a MENOS FLECHA expresion_regular:b PTCOMA 
+    |instrucciones IDENTIFICADOR:a MENOS FLECHA expresion_regular:b PTCOMA  // expresion regular .{letra}{numero}
+    |instrucciones DPORCENTAJE DPORCENTAJE DPORCENTAJE DPORCENTAJE // % % % %
+    |IDENTIFICADOR DOSPUNTOS CADENA PTCOMA 
+    |instrucciones IDENTIFICADOR DOSPUNTOS CADENA PTCOMA  //nombre_expresion : cadena
+    |error
+
+; 
+
+letras_min::= letras_min COMA RLETRAMIN 
+              |RLETRAMIN                  
+;
+
+letras_may::= letras_may COMA RLETRAMAY
+              |RLETRAMAY
+                   
+;
+lista_numeros::= lista_numeros COMA RNUMERO
+              |RNUMERO                  
+;
+simbolos::=
+     // ESPACIO
+     ADMI
+    |COMILLA
+    |NUME
+    |DOLAR
+    |DPORCENTAJE
+    |ANDD
+    |COMSIMPLE
+    |PABIERTA
+    |PCERRADA
+    |POR
+    //|MAS
+    |COMA
+    |MENOS
+    //|CONCAT
+    |DIV
+    |DOSPUNTOS
+    |PTCOMA
+    |MENOR
+    |IGUAL
+    |FLECHA
+    |INTER
+    |ARROBA
+    |CORABIERTO
+    |BARINVERTIDA
+    |CORCERRADO
+    |POTENCIA
+    |GBAJO
+    |LLAVEIZQ
+    |OR
+    |LLAVEDER
+    |ALCANCE
+
+;
+
+expresion_regular::=
+    OR expresion_regular expresion_regular 
+    |CONCAT expresion_regular:a expresion_regular
+    |POR expresion_regular
+    |INTER expresion_regular
+    |MAS expresion_regular
+    |LLAVEIZQ IDENTIFICADOR LLAVEDER
+    |CADENA
+    |SPECIAL1
+    |SPECIAL2
+    |SPECIAL3
+      
+;
+
