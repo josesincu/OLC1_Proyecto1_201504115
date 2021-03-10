@@ -13,8 +13,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
@@ -28,6 +34,8 @@ import javax.swing.tree.DefaultTreeModel;
 public class Grafica extends javax.swing.JFrame {
     //variable para el nombre de las carpetas
      public static String  nombre_carpeta;
+     public static ArrayList<Errores> listaErrores = new ArrayList<Errores>();
+     public static ArrayList<Errores> listaErroresSintacticos = new ArrayList<Errores>();
     // public static Read_Files read_file = new Read_Files();
     
     /**
@@ -226,6 +234,11 @@ public class Grafica extends javax.swing.JFrame {
             pars.parse();     
             //AST_arbolSintaxisAbstracta=pars.getAST();
             //*************           
+            //for(int i =0; i<listaErrores.size();i++){
+              //   System.out.println("i: "+i+" Tipo: "+listaErrores.get(i).tipoError+" valorError:"+listaErrores.get(i).valorError+" fila:"+listaErrores.get(i).fila+" Columna:"+listaErrores.get(i).columna);
+            //}
+             ReporteErrores();
+             ReporteErroresSintactico();
             
         } catch (Exception ex) {
             System.out.println("Error fatal en compilación de entrada: "+ex);
@@ -234,9 +247,114 @@ public class Grafica extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
+    public void ReporteErrores(){
+        FileWriter fichero = null;
+                PrintWriter pw = null;
+                try {
+                    fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//Reporte_ErroresL.html");
+                    pw = new PrintWriter(fichero);
+                    //comenzamos a escribir el html
+                    pw.println("<html>");
+                    pw.println("<head><title>REPORTE DE ERRORES</title></head>");
+                    pw.println("<body>");
+                    pw.println("<div align=\"center\">");
+                    pw.println("<h1>Reporte de Errores</h1>");
+                    pw.println("<br></br>");
+                    pw.println("<table border=1>");
+                    pw.println("<tr>");
+                    pw.println("<td bgcolor=green>TIPO</td>");
+                    pw.println("<td bgcolor=green>VALOR</td>");
+                    pw.println("<td bgcolor=green>FILA</td>");
+                    pw.println("<td bgcolor=green>COLUMNA</td>");
+                    pw.println("</tr>");
+                    for(int i=0;i<listaErrores.size();i++){
+                        pw.println("<tr>");
+                        pw.println("<td>"+listaErrores.get(i).getTipoError()+"</td>");
+                        pw.println("<td>"+listaErrores.get(i).getValorError()+"</td>");
+                        pw.println("<td>"+listaErrores.get(i).getFila()+"</td>");
+                        pw.println("<td>"+listaErrores.get(i).getColumna()+"</td>");
+                        pw.println("</tr>");
+                    }
+                    pw.println("</table>");
+                    pw.println("</div");
+                    pw.println("</body>");
+                    pw.println("</html>");
+                } catch (Exception e) {
+                }finally{
+                    if(null!=fichero){
+                        try {
+                            fichero.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(Grafica.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+"Reporte_ErroresL.html");
+            //System.out.println("Final");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void ReporteErroresSintactico(){
+        FileWriter fichero = null;
+                PrintWriter pw = null;
+                try {
+                    fichero = new FileWriter("//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//Reporte_ErroresS.html");
+                    pw = new PrintWriter(fichero);
+                    //comenzamos a escribir el html
+                    pw.println("<html>");
+                    pw.println("<head><title>REPORTE DE ERRORES</title></head>");
+                    pw.println("<body>");
+                    pw.println("<div align=\"center\">");
+                    pw.println("<h1>Reporte de Errores</h1>");
+                    pw.println("<br></br>");
+                    pw.println("<table border=1>");
+                    pw.println("<tr>");
+                    pw.println("<td bgcolor=green>TIPO</td>");
+                    pw.println("<td bgcolor=green>VALOR</td>");
+                    pw.println("<td bgcolor=green>FILA</td>");
+                    pw.println("<td bgcolor=green>COLUMNA</td>");
+                    pw.println("</tr>");
+                    for(int i=0;i<listaErroresSintacticos.size();i++){
+                        pw.println("<tr>");
+                        pw.println("<td>"+listaErroresSintacticos.get(i).getTipoError()+"</td>");
+                        pw.println("<td>"+listaErroresSintacticos.get(i).getValorError()+"</td>");
+                        pw.println("<td>"+listaErroresSintacticos.get(i).getFila()+"</td>");
+                        pw.println("<td>"+listaErroresSintacticos.get(i).getColumna()+"</td>");
+                        pw.println("</tr>");
+                    }
+                    pw.println("</table>");
+                    pw.println("</div");
+                    pw.println("</body>");
+                    pw.println("</html>");
+                } catch (Exception e) {
+                }finally{
+                    if(null!=fichero){
+                        try {
+                            fichero.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(Grafica.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//"+"Reporte_ErroresS.html");
+            //System.out.println("Final");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    
     private void btnAbrirArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirArchivoActionPerformed
         // TODO add your handling code here:
         txtEntrdada.setText("");
+        listaErrores.clear();
+        nombre_carpeta = "";
         try
             {
                 /**llamamos el metodo que permite cargar la ventana*/

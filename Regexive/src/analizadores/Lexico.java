@@ -8,6 +8,7 @@
  */
 
 package analizadores;
+import regexive.*;
 import java_cup.runtime.*;
 
 
@@ -311,6 +312,12 @@ public class Lexico implements java_cup.runtime.Scanner {
 
   /** Whether the user-EOF-code has already been executed. */
   private boolean zzEOFDone;
+
+  /* user code: */
+    public void AddError(String tipo, String lexema, int fila, int columna){
+        Errores nuevoE= new Errores(tipo, lexema, fila+1, columna+1);
+        Grafica.listaErrores.add(nuevoE);
+    }
 
 
   /**
@@ -721,7 +728,8 @@ public class Lexico implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+            { System.err.println("Error lexico: "+yytext()+ " Linea:"+(yyline)+" Columna:"+(yycolumn));
+    AddError("Error Léxico",yytext(),yyline,yycolumn);
             }
             // fall through
           case 44: break;

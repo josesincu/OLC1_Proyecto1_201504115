@@ -42,6 +42,11 @@ parser code
      public static Nodo Raiz;
      private static String direccion = "//home//dark//A_Entradas_Proyecto2//Compi_Proyecto1//";
      
+     public void AddError(String tipo, String lexema, int fila, int columna){
+        Errores nuevoE= new Errores(tipo, lexema, fila+1, columna+1);
+        Grafica.listaErroresSintacticos.add(nuevoE);
+    }
+     
 
      public static void graficarArbol(Nodo act, String nombre){
         FileWriter fichero = null;
@@ -187,12 +192,14 @@ parser code
      **/ 
     public void syntax_error(Symbol s){ 
             System.err.println("Error Sintáctico en la Fila " + (s.right) +" Columna "+s.left+ ". No se esperaba este componente: " +s.value+"."); 
+            AddError("Error Sintactico",s.value.toString(),s.right,s.left);
     } 
     /**
      * Método al que se llama en el momento en que ya no es posible una recuperación de errores.
      **/ 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
             System.err.println("Error síntactico irrecuperable en la Línea " + (s.right)+ " Columna "+s.left+". Componente " + s.value + " no reconocido."); 
+            AddError("Error Sintactico",s.value.toString(),s.right,s.left);
     }  
     
    
@@ -311,13 +318,9 @@ instrucciones ::=
             parser.contId =0;
             parser.numera_hoja =0;
 
-            //parser.lista_siguientes = new LinkedList<>();
-            //parser.transicion = new Transiciones();
-            //parser.thompson = new Thompson();
-
-            parser.lista_siguientes = null;
-            parser.transicion = null;
-            parser.thompson = null;
+            parser.lista_siguientes = new LinkedList<>();
+            parser.transicion = new Transiciones();
+            parser.thompson = new Thompson();
 
             parser.nombre_dot = "";
             RESULT=concatenacion;
@@ -353,14 +356,10 @@ instrucciones ::=
             parser.contId =0;
             parser.numera_hoja =0;
 
-            //parser.lista_siguientes = new LinkedList<>();
-            //parser.transicion = new Transiciones();
-            //parser.thompson = new Thompson();
+            parser.lista_siguientes = new LinkedList<>();
+            parser.transicion = new Transiciones();
+            parser.thompson = new Thompson();
             
-            parser.lista_siguientes = null;
-            parser.transicion = null;
-            parser.thompson = null;
-
             parser.nombre_dot = "";
             RESULT=concatenacion;
      

@@ -19,8 +19,6 @@ public class Regexive {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        
-       
         Grafica graf= null;
         graf = new Grafica();
         graf.show();

@@ -4,6 +4,7 @@
  */
 
 package analizadores;
+import regexive.*;
 import java_cup.runtime.*;
 
 %% 
@@ -34,6 +35,14 @@ ID=({LETRAMIN}|{LETRAMAY})+("_"|{NUMERO}|{LETRAMIN}|{LETRAMAY})*
 CADENACOMILLASDOBLES=[\"]([^\"\n]|(\\\"))*[\"]
 COMENTUNILINEA=("//".*\r\n)|("//".*\n)|("//".\r)
 COMENTMULTILINEA="<!"([^!>]|[^!]|"!"[^>])*"!>"
+
+%{
+    public void AddError(String tipo, String lexema, int fila, int columna){
+        Errores nuevoE= new Errores(tipo, lexema, fila+1, columna+1);
+        Grafica.listaErrores.add(nuevoE);
+    }
+%}
+
 
 
 %%
@@ -101,6 +110,9 @@ COMENTMULTILINEA="<!"([^!>]|[^!]|"!"[^>])*"!>"
 {COMENTMULTILINEA} {}
 
 . {
-    System.err.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+    
+    System.err.println("Error lexico: "+yytext()+ " Linea:"+(yyline)+" Columna:"+(yycolumn));
+    AddError("Error Léxico",yytext(),yyline,yycolumn);
+
 }
 
