@@ -255,7 +255,7 @@ public class Grafica extends javax.swing.JFrame {
                     pw = new PrintWriter(fichero);
                     //comenzamos a escribir el html
                     pw.println("<html>");
-                    pw.println("<head><title>REPORTE DE ERRORES</title></head>");
+                    pw.println("<head><title>REPORTE DE ERRORES LEXICOS</title></head>");
                     pw.println("<body>");
                     pw.println("<div align=\"center\">");
                     pw.println("<h1>Reporte de Errores</h1>");
@@ -308,7 +308,7 @@ public class Grafica extends javax.swing.JFrame {
                     pw = new PrintWriter(fichero);
                     //comenzamos a escribir el html
                     pw.println("<html>");
-                    pw.println("<head><title>REPORTE DE ERRORES</title></head>");
+                    pw.println("<head><title>REPORTE DE ERRORES SINTACTICOS</title></head>");
                     pw.println("<body>");
                     pw.println("<div align=\"center\">");
                     pw.println("<h1>Reporte de Errores</h1>");

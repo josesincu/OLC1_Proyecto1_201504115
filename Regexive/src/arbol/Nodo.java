@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * @author dark
  */
 public class Nodo {
-
+    
     private int numera_hoja;
     private Nodo hizq;
     private Nodo hder;
@@ -27,6 +27,7 @@ public class Nodo {
     private LinkedList<String> siguientes;
     
     
+    
     public Nodo(Nodo hizq, Nodo hder, String valor, int id) {
         this.numera_hoja =0;
         this.hizq = hizq;
@@ -39,6 +40,7 @@ public class Nodo {
         this.primeros = new LinkedList<String>();
         this.ultimos = new LinkedList<String>();
         this.siguientes = new LinkedList<String>();
+        
         
     }
     
@@ -58,6 +60,7 @@ public class Nodo {
         this.ultimos.add(String.valueOf(id_hoja));
         
         this.siguientes = new LinkedList<String>();
+        
         
     }
 

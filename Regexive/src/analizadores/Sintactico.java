@@ -671,7 +671,8 @@ class CUP$Sintactico$actions {
             
 
             //Metodo de Thompson
-            parser.thompson.graficarAFND(a);
+            parser.thompson.recorridoPosorden(b);
+            //parser.thompson.graficarAFND(a);
 
             
             
@@ -722,7 +723,8 @@ class CUP$Sintactico$actions {
            
            
            //Metodo de Thompson
-           parser.thompson.graficarAFND(a);
+           parser.thompson.recorridoPosorden(b);
+           //parser.thompson.graficarAFND(a);
 
             
             
@@ -1115,7 +1117,8 @@ class CUP$Sintactico$actions {
                 parser.contId++;
                 
                 //Metodo de Thompson
-                parser.thompson.Or(a.getValor(),b.getValor());
+                //parser.thompson.Or(nuevaOr,a,b);
+
                 
                 RESULT = nuevaOr;
                 
@@ -1144,7 +1147,7 @@ class CUP$Sintactico$actions {
                 parser.contId++;
                 
                 //Metodo de Thompson
-                parser.thompson.Concatenacion(a.getValor(),b.getValor());
+                //parser.thompson.Concatenacion(nuevaConcat,a,b);
                 
                 //posee singuente
                 //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo b a su SiguientePos
@@ -1172,7 +1175,7 @@ class CUP$Sintactico$actions {
                 parser.contId++;
                 
                 //Metodo de Thompson
-                parser.thompson.Asterisco(a.getValor());
+                //parser.thompson.Asterisco(nuevaPor,a);
                 
                 RESULT = nuevaPor;
                 
@@ -1198,7 +1201,7 @@ class CUP$Sintactico$actions {
                 parser.contId++;
 
                 //Metodo de Thompson
-                parser.thompson.unaVez(a.getValor());
+                //parser.thompson.unaVez(nuevaInter,a);
 
                 RESULT = nuevaInter;
                 
@@ -1224,7 +1227,7 @@ class CUP$Sintactico$actions {
                 parser.contId++;
 
                 //Metodo de Thompson
-                parser.thompson.Mas(a.getValor());
+                //parser.thompson.Mas(nuevaMas,a);
                 
                 RESULT = nuevaMas;
                 

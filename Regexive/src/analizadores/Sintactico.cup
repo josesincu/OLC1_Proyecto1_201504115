@@ -308,7 +308,8 @@ instrucciones ::=
             
 
             //Metodo de Thompson
-            parser.thompson.graficarAFND(a);
+            parser.thompson.recorridoPosorden(b);
+            //parser.thompson.graficarAFND(a);
 
             
             
@@ -346,7 +347,8 @@ instrucciones ::=
            
            
            //Metodo de Thompson
-           parser.thompson.graficarAFND(a);
+           parser.thompson.recorridoPosorden(b);
+           //parser.thompson.graficarAFND(a);
 
             
             
@@ -429,7 +431,8 @@ expresion_regular::=
                 parser.contId++;
                 
                 //Metodo de Thompson
-                parser.thompson.Or(a.getValor(),b.getValor());
+                //parser.thompson.Or(nuevaOr,a,b);
+
                 
                 RESULT = nuevaOr;
                 
@@ -443,7 +446,7 @@ expresion_regular::=
                 parser.contId++;
                 
                 //Metodo de Thompson
-                parser.thompson.Concatenacion(a.getValor(),b.getValor());
+                //parser.thompson.Concatenacion(nuevaConcat,a,b);
                 
                 //posee singuente
                 //Para cada elemento en UltimaPos del nodo a, agregar PrimeraPos del nodo b a su SiguientePos
@@ -459,7 +462,7 @@ expresion_regular::=
                 parser.contId++;
                 
                 //Metodo de Thompson
-                parser.thompson.Asterisco(a.getValor());
+                //parser.thompson.Asterisco(nuevaPor,a);
                 
                 RESULT = nuevaPor;
                 
@@ -473,7 +476,7 @@ expresion_regular::=
                 parser.contId++;
 
                 //Metodo de Thompson
-                parser.thompson.unaVez(a.getValor());
+                //parser.thompson.unaVez(nuevaInter,a);
 
                 RESULT = nuevaInter;
                 
@@ -487,7 +490,7 @@ expresion_regular::=
                 parser.contId++;
 
                 //Metodo de Thompson
-                parser.thompson.Mas(a.getValor());
+                //parser.thompson.Mas(nuevaMas,a);
                 
                 RESULT = nuevaMas;
                 
